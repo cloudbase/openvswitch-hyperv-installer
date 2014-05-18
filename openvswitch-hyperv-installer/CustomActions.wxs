@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <Binary Id="CommonActions" SourceFile="Actions\Common.js" />
+    <Binary Id="ServiceActions" SourceFile="Actions\ServiceActions.js" />
+    <Binary Id="GenericActions" SourceFile="Actions\GenericActions.js" />
+
+    <CustomAction Id="CreateCommonIncludeFile"
+              BinaryKey="CommonActions"
+              JScriptCall="createCommonIncludeFileAction" />
+
+    <CustomAction Id="DeleteCommonIncludeFile"
+              BinaryKey="CommonActions"
+              JScriptCall="deleteCommonIncludeFileAction"
+              Execute="deferred" Return="check" Impersonate="no" />
+
+    <CustomAction Id="GenerateConfDB_Prop" Property="GenerateConfDB"
+                  Value='"[BINARIESDIR]ovsdb-tool.exe" create "[CONFDIR]conf.db" "[CONFDIR]vswitch.ovsschema"|0|ovsdb-tool failed to create the conf.db database'
+                  Execute="immediate" />
+    <CustomAction Id="GenerateConfDB"
+              BinaryKey="GenericActions"
+              JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
+
+    <CustomAction Id="RestartOvsdbServerService_Prop" Return="check" Property="ChangeOvsdbServerService"
+                  Value="ovsdb-server||Restart" />
+    <CustomAction Id="StartOvsdbServerService_Prop" Return="check" Property="ChangeOvsdbServerService"
+                  Value="ovsdb-server||Start" />
+    <CustomAction Id="ChangeOvsdbServerService"
+              BinaryKey="ServiceActions"
+              JScriptCall="changeServiceAction" Execute="deferred" Return="check" Impersonate="no" />
+
+    <CustomAction Id="RestartOvsVSwitchdService_Prop" Return="check" Property="ChangeOvsVSwitchdService"
+                  Value="ovs-vswitchd||Restart" />
+    <CustomAction Id="StartOvsVSwitchdService_Prop" Return="check" Property="ChangeOvsVSwitchdService"
+                  Value="ovs-vswitchd||Start" />
+    <CustomAction Id="ChangeOvsVSwitchdService"
+              BinaryKey="ServiceActions"
+              JScriptCall="changeServiceAction" Execute="deferred" Return="check" Impersonate="no" />
+  </Fragment>
+</Wix>
