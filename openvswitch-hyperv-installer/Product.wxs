@@ -22,10 +22,10 @@
     <Feature Id="OpenvSwitchDriver" Title="Open vSwitch Hyper-V driver" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
              Description="Installs the Open vSwitch Hyper-V switch extension driver." Display="expand">
       <ComponentRef Id="OpenvSwitchDriver" />
-      <ComponentRef Id="VSwitchOVSSchema" />
+      <ComponentRef Id="ConfDir" />
+      <ComponentRef Id="LogsDir" />
       <ComponentRef Id="OvsdbServerService" />
       <ComponentRef Id="OvsVSwitchdService" />
-      <ComponentRef Id="LogsDir" />
       <ComponentRef Id="OpenvSwitchPSModule" />
     </Feature>
 
@@ -117,8 +117,10 @@
   </Fragment>
 
   <Fragment>
-    <Component Id="VSwitchOVSSchema" Directory="CONFDIR" Guid="{6DB7BC99-FF12-41E2-9EAA-A98A579BE27B}">
+    <Component Id="ConfDir" Directory="CONFDIR" Guid="{6DB7BC99-FF12-41E2-9EAA-A98A579BE27B}">
       <File Id="vswitch.ovsschema" Source="Services\vswitch.ovsschema" Checksum="yes" KeyPath="yes" />
+      <RemoveFile Id="removeConfDb" Name="conf.db" On="install" />
+      <RemoveFile Id="removeConfDbLock" Name=".conf.db.~lock~" On="install" />
     </Component>
 
     <Component Id="OvsdbServerService" Directory="BINARIESDIR" Guid="{280201D5-35E7-45D6-83B9-293F1A4F7F0E}">
