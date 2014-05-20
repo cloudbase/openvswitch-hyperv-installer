@@ -116,7 +116,7 @@ try
 		popd
 	}
 
-	copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.ps1" $outputPath
+	copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.psm1" $outputPath
 
     ExecRetry {
         &signtool.exe sign /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
