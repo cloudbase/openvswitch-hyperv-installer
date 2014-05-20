@@ -59,21 +59,21 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
         <Directory Id="CompanyFolder" Name="Cloudbase Solutions">
-          <Directory Id="INSTALLDIR" Name="Open vSwitch Hyper-V" />
+          <Directory Id="INSTALLDIR" Name="Open vSwitch" />
         </Directory>
       </Directory>
     </Directory>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="BINARIESDIR" Name="Binaries" />
+      <Directory Id="BINARIESDIR" Name="bin" />
     </DirectoryRef>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="DRIVERDIR" Name="Driver" />
+      <Directory Id="DRIVERDIR" Name="driver" />
     </DirectoryRef>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="LOGSDIR" Name="Logs">
+      <Directory Id="LOGSDIR" Name="logs">
         <Component Id="LogsDir" Guid="{CA78C399-6E2C-4D39-88FB-1F58AC9DF8AC}">
           <CreateFolder />
         </Component>
@@ -81,7 +81,7 @@
     </DirectoryRef>
 
     <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="CONFDIR" Name="Conf" />
+      <Directory Id="CONFDIR" Name="conf" />
     </DirectoryRef>
   </Fragment>
 
