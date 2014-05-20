@@ -21,6 +21,20 @@
               BinaryKey="GenericActions"
               JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
 
+    <CustomAction Id="InstallOpenVSwitchDriver_Prop" Property="InstallOpenVSwitchDriver"
+                  Value='"C:\Windows\Sysnative\netcfg.exe" -l "[DRIVERDIR]\openvswitch.inf" -c s -i openvswitch|0|netcfg failed to install the Open vSwitch Hyper-V switch extension'
+                  Execute="immediate" />
+    <CustomAction Id="InstallOpenVSwitchDriver"
+              BinaryKey="GenericActions"
+              JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
+
+    <CustomAction Id="UninstallOpenVSwitchDriver_Prop" Property="UninstallOpenVSwitchDriver"
+                  Value='"C:\Windows\Sysnative\netcfg.exe" -u openvswitch|0|netcfg failed to uninstall the Open vSwitch Hyper-V switch extension'
+                  Execute="immediate" />
+    <CustomAction Id="UninstallOpenVSwitchDriver"
+              BinaryKey="GenericActions"
+              JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
+
     <CustomAction Id="RestartOvsdbServerService_Prop" Return="check" Property="ChangeOvsdbServerService"
                   Value="ovsdb-server||Restart" />
     <CustomAction Id="StartOvsdbServerService_Prop" Return="check" Property="ChangeOvsdbServerService"
