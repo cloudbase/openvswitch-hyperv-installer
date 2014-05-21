@@ -36,6 +36,8 @@
     <WixVariable Id="WixUIDialogBmp" Value="images\dlgbmp.bmp" />
     <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
 
+    <Property Id="OVSDB_SERVER_PORT" Value="5559" />
+
     <InstallExecuteSequence>
       <Custom Action="CreateCommonIncludeFile" After="CostFinalize" />
 
@@ -127,7 +129,7 @@
       <File Id="ovsdbserver.exe" Source="Services\ovsdb-server.exe" Checksum="yes" />
       <File Id="ovsdbserverservice.exe" Source="Services\ovsdb-server-service.exe" KeyPath="yes" Checksum="yes" />
       <ServiceInstall
-                Arguments='ovsdb-server "[BINARIESDIR]ovsdb-server.exe" --log-file="[LOGSDIR]ovsdb-server.log" "[CONFDIR]conf.db"'
+                Arguments='ovsdb-server "[BINARIESDIR]ovsdb-server.exe" --log-file="[LOGSDIR]ovsdb-server.log" --remote=ptcp:[OVSDB_SERVER_PORT]:127.0.0.1 "[CONFDIR]conf.db"'
                 Id="OvsdbServerServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
@@ -158,7 +160,7 @@
       <File Id="ovsvswitchd.exe" Source="Services\ovs-vswitchd.exe" Checksum="yes" />
       <File Id="ovsvswitchdservice.exe" Source="Services\ovs-vswitchd-service.exe" KeyPath="yes" Checksum="yes" />
       <ServiceInstall
-                Arguments='ovs-vswitchd "[BINARIESDIR]ovs-vswitchd.exe" --log-file="[LOGSDIR]ovs-vswitchd.log"'
+                Arguments='ovs-vswitchd "[BINARIESDIR]ovs-vswitchd.exe" --log-file="[LOGSDIR]ovs-vswitchd.log" tcp:127.0.0.1:[OVSDB_SERVER_PORT]'
                 Id="OvsVSwitchdServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
