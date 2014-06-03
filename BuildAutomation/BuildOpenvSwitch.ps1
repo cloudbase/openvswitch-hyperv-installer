@@ -78,7 +78,7 @@ try
 		copy -Force ".\ovsdb\Release\*.exe" $outputPath
 		copy -Force ".\vswitchd\Release\*.exe" $outputPath
 		copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
-		copy -Force ".\utilities\Release\*.exe" $outputPath		
+		copy -Force ".\utilities\Release\*.exe" $outputPath
 	}
 	finally
 	{
@@ -118,8 +118,10 @@ try
 
 	copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.psm1" $outputPath
 
+    $crossCertPath = "$scriptPath\After_10-10-10_MSCV-VSClass3.cer"
+
     ExecRetry {
-        &signtool.exe sign /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
+        &signtool.exe sign /ac "$crossCertPath" /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
         if ($LastExitCode) { throw "signtool failed" }
     }
 
@@ -127,7 +129,7 @@ try
 	if ($LastExitCode) { throw "inf2cat failed" }
 
     ExecRetry {
-        &signtool.exe sign /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
+        &signtool.exe sign /ac "$crossCertPath" /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
         if ($LastExitCode) { throw "signtool failed" }
     }
 }
