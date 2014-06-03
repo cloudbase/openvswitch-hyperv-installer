@@ -118,6 +118,7 @@ try
 
 	copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.psm1" $outputPath
 
+    # See: https://knowledge.verisign.com/support/code-signing-support/index?page=content&id=SO5820&act=RATE&viewlocale=en_US&newguid=015203267fad9a701464fd90342007e8d
     $crossCertPath = "$scriptPath\After_10-10-10_MSCV-VSClass3.cer"
 
     ExecRetry {
