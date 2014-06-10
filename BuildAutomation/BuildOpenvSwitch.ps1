@@ -47,7 +47,6 @@ try
     BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $true
     BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base
 
-
 	$openvSwitchHyperVDir = "openvswitch-hyperv"
 
     ExecRetry {
@@ -72,7 +71,7 @@ try
         &cmake . -G $cmakeGenerator
         if ($LastExitCode) { throw "cmake failed" }
 
-        &msbuild OVS_Port.sln /p:Configuration=Release
+        &msbuild OVS_Port.sln /m /p:Configuration=Release /p:Platform=Win32
         if ($LastExitCode) { throw "MSBuild failed" }
 
 		copy -Force ".\ovsdb\Release\*.exe" $outputPath
@@ -91,8 +90,6 @@ try
        GitClonePull $openvSwitchHyperVKernelDir "git@github.com:/cloudbase/openvswitch-hyperv-kernel.git"
     }
 
-	$openvSwitchHyperVKernelDriverDir = "$openvSwitchHyperVKernelDir\openvswitch"
-
 	$driverOutputPath = "$outputPath\openvswitch_driver"
 	mkdir $driverOutputPath
 
@@ -103,9 +100,9 @@ try
 	pushd .
 	try
 	{
-		cd $openvSwitchHyperVKernelDriverDir
+		cd $openvSwitchHyperVKernelDir
 
-        &msbuild  openvswitch.sln /p:Configuration="Win8.1 Release"
+        &msbuild  openvswitch.sln /m /p:Configuration="Win8.1 Release"
         if ($LastExitCode) { throw "MSBuild failed" }
 
 		copy -Force ".\driver\x64\Win8.1Release\$sysFileName" $driverOutputPath
