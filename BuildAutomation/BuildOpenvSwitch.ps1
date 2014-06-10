@@ -47,26 +47,26 @@ try
     BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $true
     BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base
 
-	$openvSwitchHyperVDir = "openvswitch-hyperv"
+    $openvSwitchHyperVDir = "openvswitch-hyperv"
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
         GitClonePull $openvSwitchHyperVDir "git@github.com:/cloudbase/openvswitch-hyperv.git"
     }
 
-	$thirdPartyBaseDir = "$openvSwitchHyperVDir\windows\thirdparty"
-	$winPthreadLibDir = "$thirdPartyBaseDir\win-pthread\lib\x86"
+    $thirdPartyBaseDir = "$openvSwitchHyperVDir\windows\thirdparty"
+    $winPthreadLibDir = "$thirdPartyBaseDir\win-pthread\lib\x86"
 
-	CheckDir $winPthreadLibDir
+    CheckDir $winPthreadLibDir
 
-	copy -Force "$buildDir\openssl-$opensslVersion\out32dll\libeay32.lib" $thirdPartyBaseDir
-	copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
-	copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
+    copy -Force "$buildDir\openssl-$opensslVersion\out32dll\libeay32.lib" $thirdPartyBaseDir
+    copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
+    copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
 
-	pushd .
-	try
-	{
-		cd $openvSwitchHyperVDir
+    pushd .
+    try
+    {
+        cd $openvSwitchHyperVDir
 
         &cmake . -G $cmakeGenerator
         if ($LastExitCode) { throw "cmake failed" }
@@ -74,46 +74,46 @@ try
         &msbuild OVS_Port.sln /m /p:Configuration=Release /p:Platform=Win32
         if ($LastExitCode) { throw "MSBuild failed" }
 
-		copy -Force ".\ovsdb\Release\*.exe" $outputPath
-		copy -Force ".\vswitchd\Release\*.exe" $outputPath
-		copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
-		copy -Force ".\utilities\Release\*.exe" $outputPath
-	}
-	finally
-	{
-		popd
-	}
+        copy -Force ".\ovsdb\Release\*.exe" $outputPath
+        copy -Force ".\vswitchd\Release\*.exe" $outputPath
+        copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
+        copy -Force ".\utilities\Release\*.exe" $outputPath
+    }
+    finally
+    {
+        popd
+    }
 
-	$openvSwitchHyperVKernelDir = "openvswitch-hyperv-kernel"
+    $openvSwitchHyperVKernelDir = "openvswitch-hyperv-kernel"
 
     ExecRetry {
        GitClonePull $openvSwitchHyperVKernelDir "git@github.com:/cloudbase/openvswitch-hyperv-kernel.git"
     }
 
-	$driverOutputPath = "$outputPath\openvswitch_driver"
-	mkdir $driverOutputPath
+    $driverOutputPath = "$outputPath\openvswitch_driver"
+    mkdir $driverOutputPath
 
-	$sysFileName = "openvswitch.sys"
-	$infFileName = "openvswitch.inf"
-	$catFileName = "openvswitch.cat"
+    $sysFileName = "openvswitch.sys"
+    $infFileName = "openvswitch.inf"
+    $catFileName = "openvswitch.cat"
 
-	pushd .
-	try
-	{
-		cd $openvSwitchHyperVKernelDir
+    pushd .
+    try
+    {
+        cd $openvSwitchHyperVKernelDir
 
         &msbuild  openvswitch.sln /m /p:Configuration="Win8.1 Release"
         if ($LastExitCode) { throw "MSBuild failed" }
 
-		copy -Force ".\driver\x64\Win8.1Release\$sysFileName" $driverOutputPath
-		copy -Force ".\driver\x64\Win8.1Release\$infFileName" $driverOutputPath
-	}
-	finally
-	{
-		popd
-	}
+        copy -Force ".\driver\x64\Win8.1Release\$sysFileName" $driverOutputPath
+        copy -Force ".\driver\x64\Win8.1Release\$infFileName" $driverOutputPath
+    }
+    finally
+    {
+        popd
+    }
 
-	copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.psm1" $outputPath
+    copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.psm1" $outputPath
 
     # See: https://knowledge.verisign.com/support/code-signing-support/index?page=content&id=SO5820&act=RATE&viewlocale=en_US&newguid=015203267fad9a701464fd90342007e8d
     $crossCertPath = "$scriptPath\After_10-10-10_MSCV-VSClass3.cer"
@@ -123,8 +123,8 @@ try
         if ($LastExitCode) { throw "signtool failed" }
     }
 
-	&inf2cat.exe /driver:$driverOutputPath /os:8_x64
-	if ($LastExitCode) { throw "inf2cat failed" }
+    &inf2cat.exe /driver:$driverOutputPath /os:8_x64
+    if ($LastExitCode) { throw "inf2cat failed" }
 
     ExecRetry {
         &signtool.exe sign /ac "$crossCertPath" /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
@@ -133,5 +133,5 @@ try
 }
 finally
 {
-	popd
+    popd
 }

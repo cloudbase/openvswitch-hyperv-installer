@@ -37,22 +37,22 @@ try
 
     $buildDir = "$basePath\Build"
     $buildOutputDir = "$buildDir\bin"
-	$driverBuildOutputDir = "$buildOutputDir\openvswitch_driver"
+    $driverBuildOutputDir = "$buildOutputDir\openvswitch_driver"
 
-	$ovsCliBinDir = "$msi_project_dir\Binaries"
-	$ovsServicesBinDir = "$msi_project_dir\Services"
-	$ovsDriverBinDir = "$msi_project_dir\Driver"
+    $ovsCliBinDir = "$msi_project_dir\Binaries"
+    $ovsServicesBinDir = "$msi_project_dir\Services"
+    $ovsDriverBinDir = "$msi_project_dir\Driver"
 
-	del -Force -Recurse "$ovsCliBinDir\*"
+    del -Force -Recurse "$ovsCliBinDir\*"
     copy "$buildOutputDir\*.dll" $ovsCliBinDir
     copy "$buildOutputDir\*.exe" $ovsCliBinDir
 
-	move -Force "$ovsCliBinDir\ovsdb-server.exe" $ovsServicesBinDir
-	move -Force "$ovsCliBinDir\ovs-vswitchd.exe" $ovsServicesBinDir
+    move -Force "$ovsCliBinDir\ovsdb-server.exe" $ovsServicesBinDir
+    move -Force "$ovsCliBinDir\ovs-vswitchd.exe" $ovsServicesBinDir
     copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir	
     copy -Force "$buildOutputDir\OVS.psm1" $msi_project_dir
-		
-	del -Force -Recurse "$ovsDriverBinDir\*"
+        
+    del -Force -Recurse "$ovsDriverBinDir\*"
     copy -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
 
     pushd .
