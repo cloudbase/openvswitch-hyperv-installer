@@ -363,3 +363,10 @@ function ImportCertificateUser($pfxPath, $pfxPassword) {
 
     return $cert.Thumbprint
 }
+
+function ChechFileHash($path, $hash, $algorithm="SHA1") {
+    $h = Get-Filehash -Algorithm $algorithm $path
+    if ($h.Hash.ToUpper() -ne $hash.ToUpper()) {
+        throw "Hash comparison failed for file: $path"
+    }
+}

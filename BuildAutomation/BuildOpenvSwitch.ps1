@@ -19,10 +19,15 @@ $ENV:PATH += ";${ENV:ProgramFiles(x86)}\nasm"
 $vsVersion = "12.0"
 
 $cmakeGenerator = "Visual Studio $($vsVersion.Split(".")[0])"
+$platformToolset = "v$($vsVersion.Replace('.', ''))"
+
 SetVCVars $vsVersion
 
 $pthreadsWin32Base = "pthreads-w32-2-9-1-release"
-$opensslVersion = "1.0.1g"
+$pthreadsWin32MD5 = "a3cb284ba0914c9d26e0954f60341354"
+
+$opensslVersion = "1.0.1h"
+$opensslSha1 = "b2239599c8bf8f7fc48590a55205c26abe560bf8"
 
 $basePath = "C:\OpenStack\build\OpenvSwitch"
 $buildDir = "$basePath\Build"
@@ -44,8 +49,8 @@ try
     cd $buildDir
     mkdir $outputPath
 
-    BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $true
-    BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base
+    BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $platformToolset $true $true $opensslSha1
+    BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base $pthreadsWin32MD5
 
     $openvSwitchHyperVDir = "openvswitch-hyperv"
 
