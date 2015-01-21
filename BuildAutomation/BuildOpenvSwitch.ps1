@@ -69,8 +69,6 @@ try
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
     copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
 
-    $ENV:PATH = "$mingwBaseDir\msys\1.0\bin\;$ENV:PATH"
-
     pushd .
     try
     {
@@ -78,6 +76,7 @@ try
 
         $msysCwd = "/" + $pwd.path.Replace("\", "/").Replace(":", "")
         $pthreadDir = ($buildDir + "\" + $winPthreadLibDir).Replace("\", "/")
+        # This must be the Visual Studio version of link.exe, not MinGW
         $vsLinkPath = $(Get-Command link.exe).path
 
         $msysScript = @"
@@ -95,8 +94,11 @@ exit
         echo $msysScript
         $msysScriptPath = Join-Path $pwd "build.sh"
         $msysScript.Replace("`r`n","`n") | Set-Content $msysScriptPath -Force
+
+        $ENV:PATH = "$mingwBaseDir\msys\1.0\bin\;$ENV:PATH"
         &sh --login -i $msysScriptPath
         if ($LastExitCode) { throw "build.sh failed" }
+
         del $msysScriptPath
 
         copy -Force ".\ovsdb\*.exe" $outputPath
