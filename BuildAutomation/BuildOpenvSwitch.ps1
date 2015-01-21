@@ -52,7 +52,7 @@ try
     BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $platformToolset $true $true $opensslSha1
     BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base $pthreadsWin32MD5
 
-    $openvSwitchHyperVDir = "openvswitch-hyperv"
+    $openvSwitchHyperVDir = "openvswitch_bond_interfaces"
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
