@@ -71,9 +71,11 @@
         </Directory>
       </Directory>
       <Directory Id="CommonAppDataFolder">
-        <Component Id="AppDataDir" Directory="openvswitch" Guid="{9FAA3CD1-2234-4D6E-A974-D3D48A40773F}">
+        <Directory Id="APPDATADIR" Name="openvswitch">
+          <Component Id="AppDataDir" Guid="{9FAA3CD1-2234-4D6E-A974-D3D48A40773F}">
             <CreateFolder />
-        </Component>
+          </Component>
+        </Directory>
       </Directory>
     </Directory>
 
