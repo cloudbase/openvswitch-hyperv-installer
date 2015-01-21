@@ -24,6 +24,7 @@
       <ComponentRef Id="OpenvSwitchDriver" />
       <ComponentRef Id="ConfDir" />
       <ComponentRef Id="LogsDir" />
+      <ComponentRef Id="AppDataDir" />
       <ComponentRef Id="OvsdbServerService" />
       <ComponentRef Id="OvsVSwitchdService" />
       <ComponentRef Id="OpenvSwitchPSModule" />
@@ -70,8 +71,9 @@
         </Directory>
       </Directory>
       <Directory Id="CommonAppDataFolder">
-        <Directory Id="CommonAppOpenvswitch" Name="openvswitch">
-        </Directory>
+        <Component Id="AppDataDir" Directory="openvswitch" Guid="{9FAA3CD1-2234-4D6E-A974-D3D48A40773F}">
+            <CreateFolder />
+        </Component>
       </Directory>
     </Directory>
 
