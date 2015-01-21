@@ -3,7 +3,6 @@ $ErrorActionPreference = "Stop"
 <#
 Install requirements first, see: Installrequirements.ps1
 #>
-
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 . "$scriptPath\BuildUtils.ps1"
 . "$scriptPath\Dependencies.ps1"
@@ -15,6 +14,8 @@ $ENV:PATH += ";$ENV:ProgramFiles\7-Zip"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\Git\bin"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\CMake 2.8\bin"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\nasm"
+
+$mingwBaseDir = "C:\MinGW"
 
 $vsVersion = "12.0"
 
@@ -48,7 +49,6 @@ try
     mkdir $buildDir
     cd $buildDir
     mkdir $outputPath
-
     BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $platformToolset $true $true $opensslSha1
     BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base $pthreadsWin32MD5
 
@@ -56,11 +56,11 @@ try
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
-        GitClonePull $openvSwitchHyperVDir "git@github.com:/cloudbase/openvswitch-hyperv.git"
+        GitClonePull $openvSwitchHyperVDir "https://github.com/aserdean/openvswitch_bond_interfaces.git"
     }
 
     $thirdPartyBaseDir = "$openvSwitchHyperVDir\windows\thirdparty"
-    $winPthreadLibDir = "$thirdPartyBaseDir\win-pthread\lib\x86"
+    $winPthreadLibDir = "$thirdPartyBaseDir\winpthread\lib\x86"
 
     CheckDir $winPthreadLibDir
 
@@ -68,57 +68,63 @@ try
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
     copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
 
+    $ENV:PATH = "$mingwBaseDir\msys\1.0\bin\;$ENV:PATH"
+
     pushd .
     try
     {
         cd $openvSwitchHyperVDir
 
-        &cmake . -G $cmakeGenerator
-        if ($LastExitCode) { throw "cmake failed" }
+        $msysCwd = "/" + $pwd.path.Replace("\", "/").Replace(":", "")
+        $pthreadDir = ($buildDir + "\" + $winPthreadLibDir).Replace("\", "/")
+        $vsLinkPath = $(Get-Command link.exe).path
 
-        &msbuild OVS_Port.sln /m /p:Configuration=Release /p:Platform=Win32
-        if ($LastExitCode) { throw "MSBuild failed" }
+        $msysScript = @"
+#!/bin/bash
+set -e
+cd $msysCwd
+./boot.sh
+./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32" --prefix="C:/ProgramData/openvswitch" \
+--localstatedir="C:/ProgramData/openvswitch" --sysconfdir="C:/ProgramData/openvswitch" \
+--with-pthread="$pthreadDir" --with-vstudioddk="Win8.1 Release"
+make clean && make
+exit
+"@
+        $msysScriptPath = Join-Path $pwd "build.sh"
+        $msysScript.Replace("`r`n","`n") | Set-Content $msysScriptPath -Force
+        &sh --login -i $msysScriptPath
+        if ($LastExitCode) { throw "build.sh failed" }
+        del $msysScriptPath
 
-        copy -Force ".\ovsdb\Release\*.exe" $outputPath
-        copy -Force ".\vswitchd\Release\*.exe" $outputPath
+        copy -Force ".\ovsdb\*.exe" $outputPath
+        copy -Force ".\vswitchd\*.exe" $outputPath
         copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
-        copy -Force ".\utilities\Release\*.exe" $outputPath
+        copy -Force ".\utilities\*.exe" $outputPath
     }
     finally
     {
         popd
     }
 
-    $openvSwitchHyperVKernelDir = "openvswitch-hyperv-kernel"
-
-    ExecRetry {
-       GitClonePull $openvSwitchHyperVKernelDir "git@github.com:/cloudbase/openvswitch-hyperv-kernel.git"
-    }
-
-    $driverOutputPath = "$outputPath\openvswitch_driver"
-    mkdir $driverOutputPath
-
-    $sysFileName = "openvswitch.sys"
-    $infFileName = "openvswitch.inf"
-    $catFileName = "openvswitch.cat"
+    $sysFileName = "ovsext.sys"
+    $infFileName = "ovsext.inf"
+    $catFileName = "ovsext.cat"
 
     pushd .
     try
     {
-        cd $openvSwitchHyperVKernelDir
+        cd "$openvSwitchHyperVDir\datapath-windows"
 
-        &msbuild  openvswitch.sln /m /p:Configuration="Win8.1 Release"
-        if ($LastExitCode) { throw "MSBuild failed" }
-
-        copy -Force ".\driver\x64\Win8.1Release\$sysFileName" $driverOutputPath
-        copy -Force ".\driver\x64\Win8.1Release\$infFileName" $driverOutputPath
+        copy -Force "x64\Win8.1Release\package\$sysFileName" $driverOutputPath
+        copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath
+        copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath
     }
     finally
     {
         popd
     }
 
-    copy -Force "$openvSwitchHyperVKernelDir\Scripts\OVS.psm1" $outputPath
+    copy -Force "$openvSwitchHyperVDir\datapath-windows\misc\OVS.psm1" $outputPath
 
     # See: https://knowledge.verisign.com/support/code-signing-support/index?page=content&id=SO5820&act=RATE&viewlocale=en_US&newguid=015203267fad9a701464fd90342007e8d
     $crossCertPath = "$scriptPath\After_10-10-10_MSCV-VSClass3.cer"
