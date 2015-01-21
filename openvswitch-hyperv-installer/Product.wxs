@@ -8,15 +8,16 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="mszip" />
 
-    <Feature Id="VC120Redist" Title="Visual C++ 12.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1" Absent="disallow" InstallDefault="local" TypicalDefault="install">
-      <MergeRef Id="VC120Redist" />
-    </Feature>
-
     <Feature Id="OpenvSwitchCLI" Title="Open vSwitch CLI" Level="1" Absent="disallow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
              Description="Installs the Open vSwitch command line tools."
              ConfigurableDirectory="INSTALLDIR" Display="expand">
       <ComponentGroupRef Id="BinariesComponentGroup" />
       <ComponentRef Id="OpenvSwitchCLIPath" />
+
+      <Feature Id="VC120Redist" Title="Visual C++ 12.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1"
+               Absent="disallow" InstallDefault="followParent" TypicalDefault="install">
+        <MergeRef Id="VC120Redist" />
+      </Feature>
     </Feature>
 
     <Feature Id="OpenvSwitchDriver" Title="Open vSwitch Hyper-V driver" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
