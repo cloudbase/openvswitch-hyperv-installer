@@ -106,6 +106,9 @@ exit
         popd
     }
 
+    $driverOutputPath = "$outputPath\openvswitch_driver"
+    mkdir $driverOutputPath
+
     $sysFileName = "ovsext.sys"
     $infFileName = "ovsext.inf"
     $catFileName = "ovsext.cat"
