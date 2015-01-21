@@ -14,6 +14,7 @@ $ENV:PATH += ";$ENV:ProgramFiles\7-Zip"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\Git\bin"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\CMake 2.8\bin"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\nasm"
+$ENV:PATH += ";C:\Python27"
 
 $mingwBaseDir = "C:\MinGW"
 
