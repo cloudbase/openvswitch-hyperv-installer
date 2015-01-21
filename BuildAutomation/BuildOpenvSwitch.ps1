@@ -91,6 +91,8 @@ cd $msysCwd
 make clean && make
 exit
 "@
+
+        echo $msysScript
         $msysScriptPath = Join-Path $pwd "build.sh"
         $msysScript.Replace("`r`n","`n") | Set-Content $msysScriptPath -Force
         &sh --login -i $msysScriptPath
