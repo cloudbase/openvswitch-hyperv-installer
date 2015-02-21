@@ -169,7 +169,7 @@
       <File Id="ovsvswitchd.exe" Source="Services\ovs-vswitchd.exe" Checksum="yes" />
       <File Id="ovsvswitchdservice.exe" Source="Services\ovs-vswitchd-service.exe" KeyPath="yes" Checksum="yes" />
       <ServiceInstall
-                Arguments='ovs-vswitchd "[BINARIESDIR]ovs-vswitchd.exe" --log-file="[LOGSDIR]ovs-vswitchd.log"'
+                Arguments='ovs-vswitchd "[BINARIESDIR]ovs-vswitchd.exe"'
                 Id="OvsVSwitchdServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
