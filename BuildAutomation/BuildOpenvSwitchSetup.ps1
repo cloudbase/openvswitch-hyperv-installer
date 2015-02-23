@@ -37,11 +37,13 @@ try
 
     $buildDir = "$basePath\Build"
     $buildOutputDir = "$buildDir\bin"
+    $buildOutputSymbolsDir = "$buildDir\symbols"
     $driverBuildOutputDir = "$buildOutputDir\openvswitch_driver"
 
     $ovsCliBinDir = "$msi_project_dir\Binaries"
     $ovsServicesBinDir = "$msi_project_dir\Services"
     $ovsDriverBinDir = "$msi_project_dir\Driver"
+    $ovsSymbolsDir = "$msi_project_dir\Symbols"
 
     del -Force -Recurse "$ovsCliBinDir\*"
     copy "$buildOutputDir\*.dll" $ovsCliBinDir
@@ -51,9 +53,12 @@ try
     move -Force "$ovsCliBinDir\ovs-vswitchd.exe" $ovsServicesBinDir
     copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir	
     copy -Force "$buildOutputDir\OVS.psm1" $msi_project_dir
-        
+
     del -Force -Recurse "$ovsDriverBinDir\*"
     copy -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
+
+    del -Force -Recurse "$ovsSymbolsDir\*"
+    copy -Force $buildOutputSymbolsDir $ovsSymbolsDir
 
     pushd .
     try

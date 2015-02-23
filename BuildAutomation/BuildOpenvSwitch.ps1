@@ -34,6 +34,7 @@ $opensslSha1 = "b2239599c8bf8f7fc48590a55205c26abe560bf8"
 $basePath = "C:\OpenStack\build\OpenvSwitch"
 $buildDir = "$basePath\Build"
 $outputPath = "$buildDir\bin"
+$outputSymbolsPath = "$buildDir\symbols"
 
 $ENV:OPENSSL_ROOT_DIR="$outputPath\OpenSSL"
 
@@ -48,6 +49,8 @@ try
 {
     CheckRemoveDir $buildDir
     mkdir $buildDir
+    CheckRemoveDir $outputSymbolsPath
+    mkdir $outputSymbolsPath
     cd $buildDir
     mkdir $outputPath
     BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $platformToolset $true $true $opensslSha1
@@ -105,6 +108,10 @@ exit
         copy -Force ".\vswitchd\*.exe" $outputPath
         copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
         copy -Force ".\utilities\*.exe" $outputPath
+
+        copy -Force ".\ovsdb\*.pdb" $outputSymbolsPath
+        copy -Force ".\vswitchd\*.pdb" $outputSymbolsPath
+        copy -Force ".\utilities\*.pdb" $outputSymbolsPath
     }
     finally
     {
@@ -126,6 +133,7 @@ exit
         copy -Force "x64\Win8.1Release\package\$sysFileName" $driverOutputPath
         copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath
         copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath
+        copy -Force "x64\Win8.1Release\*.pdb" $outputSymbolsPath
     }
     finally
     {

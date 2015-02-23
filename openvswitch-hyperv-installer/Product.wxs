@@ -12,6 +12,7 @@
              Description="Installs the Open vSwitch command line tools."
              ConfigurableDirectory="INSTALLDIR" Display="expand">
       <ComponentGroupRef Id="BinariesComponentGroup" />
+      <ComponentGroupRef Id="SymbolsComponentGroup" />
       <ComponentRef Id="OpenvSwitchCLIPath" />
 
       <Feature Id="VC120Redist" Title="Visual C++ 12.0 Runtime" AllowAdvertise="no" Display="hidden" Level="1"
@@ -82,6 +83,10 @@
 
     <DirectoryRef Id="INSTALLDIR">
       <Directory Id="BINARIESDIR" Name="bin" />
+    </DirectoryRef>
+
+    <DirectoryRef Id="INSTALLDIR">
+      <Directory Id="SYMBOLSDIR" Name="symbols" />
     </DirectoryRef>
 
     <DirectoryRef Id="INSTALLDIR">
