@@ -57,7 +57,8 @@ try
     del -Force -Recurse "$ovsDriverBinDir\*"
     copy -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
 
-    del -Force -Recurse "$ovsSymbolsDir\*"
+    CheckRemoveDir $ovsSymbolsDir
+    mkdir $ovsSymbolsDir
     copy -Force $buildOutputSymbolsDir $ovsSymbolsDir
 
     pushd .
