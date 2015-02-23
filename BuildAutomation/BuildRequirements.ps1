@@ -42,3 +42,13 @@ Move "$toolsdir\Release" "$toolsdir\AlexFTPS-1.1.0"
 $pfxPassword = "changeme"
 $thumbprint = ImportCertificateUser "$ENV:USERPROFILE\Cloudbase_authenticode.p12" $pfxPassword
 # TODO: write thumbrint to file and load it in the build script(s) in place of the hardcoded value
+
+# TODO: expand
+# python
+# msys - system_builder
+#     - libtool
+#     - automake
+#     - autoconf
+#     - binutils
+#
+# Rename MinGW link.exe to avoid conflicks with VS
