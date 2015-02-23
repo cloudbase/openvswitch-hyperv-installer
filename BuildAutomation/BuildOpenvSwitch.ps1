@@ -133,7 +133,7 @@ exit
         copy -Force "x64\Win8.1Release\package\$sysFileName" $driverOutputPath
         copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath
         copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath
-        copy -Force "x64\Win8.1Release\*.pdb" $outputSymbolsPath
+        copy -Force "ovsext\x64\Win8.1Release\*.pdb" $outputSymbolsPath
     }
     finally
     {
