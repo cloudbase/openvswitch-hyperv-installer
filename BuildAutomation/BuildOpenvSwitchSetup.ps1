@@ -45,7 +45,8 @@ try
     $ovsDriverBinDir = "$msi_project_dir\Driver"
     $ovsSymbolsDir = "$msi_project_dir\Symbols"
 
-    del -Force -Recurse "$ovsCliBinDir\*"
+    CheckRemoveDir $ovsCliBinDir
+    mkdir $ovsCliBinDir
     copy "$buildOutputDir\*.dll" $ovsCliBinDir
     copy "$buildOutputDir\*.exe" $ovsCliBinDir
 
@@ -54,7 +55,8 @@ try
     copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir	
     copy -Force "$buildOutputDir\OVS.psm1" $msi_project_dir
 
-    del -Force -Recurse "$ovsDriverBinDir\*"
+    CheckRemoveDir $ovsDriverBinDir
+    mkdir $ovsDriverBinDir
     copy -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
 
     CheckRemoveDir $ovsSymbolsDir
