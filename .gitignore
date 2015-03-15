@@ -17,6 +17,7 @@ bld/
 [Oo]bj/
 
 openvswitch-hyperv-installer/Binaries.wxs
+openvswitch-hyperv-installer/Symbols.wxs
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
