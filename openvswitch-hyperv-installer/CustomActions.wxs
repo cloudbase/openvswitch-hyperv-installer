@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
-    <Binary Id="CommonActions" SourceFile="Actions\Common.js" />
     <Binary Id="OVSActions" SourceFile="Actions\OVSActions.js" />
-
-    <CustomAction Id="CreateCommonIncludeFile"
-              BinaryKey="CommonActions"
-              JScriptCall="createCommonIncludeFileAction" />
-
-    <CustomAction Id="DeleteCommonIncludeFile"
-              BinaryKey="CommonActions"
-              JScriptCall="deleteCommonIncludeFileAction"
-              Execute="deferred" Return="check" Impersonate="no" />
 
     <CustomAction Id="GenerateConfDB_Prop" Property="GenerateConfDB"
                   Value='"[BINARIESDIR]ovsdb-tool.exe" create "[CONFDIR]conf.db" "[CONFDIR]vswitch.ovsschema"|0|ovsdb-tool failed to create the conf.db database'
