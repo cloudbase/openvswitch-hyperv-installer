@@ -42,9 +42,7 @@
     <Folder Include="Services" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Actions\Common.js" />
-    <Content Include="Actions\GenericActions.js" />
-    <Content Include="Actions\ServiceActions.js" />
+    <Content Include="Actions\OVSActions.js" />
     <Content Include="Binaries\libeay32.dll" />
     <Content Include="Binaries\nlmon.exe" />
     <Content Include="Binaries\openssl.exe" />
