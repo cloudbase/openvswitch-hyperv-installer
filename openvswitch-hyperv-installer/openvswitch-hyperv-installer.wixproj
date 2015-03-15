@@ -43,19 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Actions\OVSActions.js" />
-    <Content Include="Binaries\libeay32.dll" />
-    <Content Include="Binaries\nlmon.exe" />
-    <Content Include="Binaries\openssl.exe" />
-    <Content Include="Binaries\ovs-appctl.exe" />
-    <Content Include="Binaries\ovs-benchmark.exe" />
-    <Content Include="Binaries\ovs-dpctl.exe" />
-    <Content Include="Binaries\ovs-ofctl.exe" />
-    <Content Include="Binaries\ovs-vlan-bug-workaround.exe" />
-    <Content Include="Binaries\ovs-vsctl.exe" />
-    <Content Include="Binaries\ovsdb-client.exe" />
-    <Content Include="Binaries\ovsdb-tool.exe" />
-    <Content Include="Binaries\pthreadVC2.dll" />
-    <Content Include="Binaries\ssleay32.dll" />
     <Content Include="Driver\openvswitch.cat" />
     <Content Include="Driver\openvswitch.inf" />
     <Content Include="Driver\openvswitch.sys" />
