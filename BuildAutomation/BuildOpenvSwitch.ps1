@@ -1,3 +1,7 @@
+Param(
+  [string]$SignX509Thumbprint
+)
+
 $ErrorActionPreference = "Stop"
 
 <#
@@ -40,8 +44,6 @@ $ENV:OPENSSL_ROOT_DIR="$outputPath\OpenSSL"
 
 # Needed for SSH
 $ENV:HOME = $ENV:USERPROFILE
-
-$sign_cert_thumbprint = "65c29b06eb665ce202676332e8129ac48d613c61"
 
 CheckDir $basePath
 pushd .
@@ -145,17 +147,27 @@ exit
     # See: https://knowledge.verisign.com/support/code-signing-support/index?page=content&id=SO5820&act=RATE&viewlocale=en_US&newguid=015203267fad9a701464fd90342007e8d
     $crossCertPath = "$scriptPath\After_10-10-10_MSCV-VSClass3.cer"
 
-    ExecRetry {
-        &signtool.exe sign /ac "$crossCertPath" /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
-        if ($LastExitCode) { throw "signtool failed" }
+    if($SignX509Thumbprint)
+    {
+        ExecRetry {
+            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
+            if ($LastExitCode) { throw "signtool failed" }
+        }
+    }
+    else
+    {
+        Write-Warning "Driver not signed since the X509 thumbprint has not been specified!"
     }
 
     &inf2cat.exe /driver:$driverOutputPath /os:8_x64
     if ($LastExitCode) { throw "inf2cat failed" }
 
-    ExecRetry {
-        &signtool.exe sign /ac "$crossCertPath" /sha1 $sign_cert_thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
-        if ($LastExitCode) { throw "signtool failed" }
+    if($SignX509Thumbprint)
+    {
+        ExecRetry {
+            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
+            if ($LastExitCode) { throw "signtool failed" }
+        }
     }
 }
 finally
