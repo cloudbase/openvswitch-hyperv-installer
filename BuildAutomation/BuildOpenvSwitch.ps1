@@ -150,6 +150,7 @@ exit
     if($SignX509Thumbprint)
     {
         ExecRetry {
+            Write-Host "Signing driver with certificate: $SignX509Thumbprint"
             &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
             if ($LastExitCode) { throw "signtool failed" }
         }
@@ -165,6 +166,7 @@ exit
     if($SignX509Thumbprint)
     {
         ExecRetry {
+            Write-Host "Signing CAT file with certificate: $SignX509Thumbprint"
             &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
             if ($LastExitCode) { throw "signtool failed" }
         }
