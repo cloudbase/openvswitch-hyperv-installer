@@ -58,11 +58,11 @@ try
     BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $platformToolset $true $true $opensslSha1
     BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base $pthreadsWin32MD5
 
-    $openvSwitchHyperVDir = "openvswitch_bond_interfaces"
+    $openvSwitchHyperVDir = "ovs"
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
-        GitClonePull $openvSwitchHyperVDir "https://github.com/aserdean/openvswitch_bond_interfaces.git"
+        GitClonePull $openvSwitchHyperVDir "https://github.com/cloudbase/ovs.git" branch-2.4-ovs
     }
 
     $thirdPartyBaseDir = "$openvSwitchHyperVDir\windows\thirdparty"
@@ -73,6 +73,9 @@ try
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\libeay32.lib" $thirdPartyBaseDir
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
     copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
+
+    #automake already appends \lib\x86 to the pthread library
+    $winPthreadLibDir = "$thirdPartyBaseDir\winpthread"
 
     pushd .
     try
@@ -89,9 +92,9 @@ try
 set -e
 cd $msysCwd
 ./boot.sh
-./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32" --prefix="C:/ProgramData/openvswitch" \
+./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32 -liphlpapi" --prefix="C:/ProgramData/openvswitch" \
 --localstatedir="C:/ProgramData/openvswitch" --sysconfdir="C:/ProgramData/openvswitch" \
---with-pthread="$pthreadDir" --with-vstudioddk="Win8.1 Release"
+--with-pthread="$pthreadDir" --with-vstudiotarget="Release"
 make clean && make
 exit
 "@
@@ -120,7 +123,9 @@ exit
         popd
     }
 
-    $driverOutputPath = "$outputPath\openvswitch_driver"
+    #We will copy both Win8/8.1 release since the installer will automatically
+    #choose which version should be installed
+    $driverOutputPath = "$outputPath\openvswitch_driver\Win8.1"
     mkdir $driverOutputPath
 
     $sysFileName = "ovsext.sys"
@@ -136,6 +141,27 @@ exit
         copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath
         copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath
         copy -Force "ovsext\x64\Win8.1Release\*.pdb" $outputSymbolsPath
+    }
+    finally
+    {
+        popd
+    }
+    $driverOutputPath = "$outputPath\openvswitch_driver\Win8"
+    mkdir $driverOutputPath
+
+    $sysFileName = "ovsext.sys"
+    $infFileName = "ovsext.inf"
+    $catFileName = "ovsext.cat"
+
+    pushd .
+    try
+    {
+        cd "$openvSwitchHyperVDir\datapath-windows"
+
+        copy -Force "x64\Win8Release\package\$sysFileName" $driverOutputPath
+        copy -Force "x64\Win8Release\package\$infFileName" $driverOutputPath
+        copy -Force "x64\Win8Release\package\$catFileName" $driverOutputPath
+        copy -Force "ovsext\x64\Win8Release\*.pdb" $outputSymbolsPath
     }
     finally
     {

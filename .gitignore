@@ -189,3 +189,7 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+Binaries/
+Driver/
+OVS.psm1
+Services/

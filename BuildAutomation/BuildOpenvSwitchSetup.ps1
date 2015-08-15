@@ -56,7 +56,7 @@ try
 
     CheckRemoveDir $ovsDriverBinDir
     mkdir $ovsDriverBinDir
-    copy -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
+    copy -Recurse -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
 
     CheckRemoveDir $ovsSymbolsDir
     mkdir $ovsSymbolsDir
