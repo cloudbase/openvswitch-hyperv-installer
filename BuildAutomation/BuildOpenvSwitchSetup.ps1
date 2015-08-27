@@ -76,7 +76,7 @@ try
         popd
     }
 
-    $msi_path = "$msi_project_dir\bin\Release\openvswitch-hyperv-installer.msi"
+    $msi_path = "$msi_project_dir\bin\Release\OpenvSwitch.msi"
 
     if($SignX509Thumbprint)
     {
