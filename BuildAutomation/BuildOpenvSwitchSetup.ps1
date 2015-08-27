@@ -49,6 +49,8 @@ try
     copy "$buildOutputDir\*.dll" $ovsCliBinDir
     copy "$buildOutputDir\*.exe" $ovsCliBinDir
 
+    CheckRemoveDir $ovsServicesBinDir
+    mkdir $ovsServicesBinDir
     move -Force "$ovsCliBinDir\ovsdb-server.exe" $ovsServicesBinDir
     move -Force "$ovsCliBinDir\ovs-vswitchd.exe" $ovsServicesBinDir
     copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir	
