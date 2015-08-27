@@ -1,4 +1,5 @@
 Param(
+  [string]$OVSGitBranch = "branch-2.4-ovs",
   [string]$SignX509Thumbprint
 )
 
@@ -62,7 +63,7 @@ try
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
-        GitClonePull $openvSwitchHyperVDir "https://github.com/cloudbase/ovs.git" branch-2.4-ovs
+        GitClonePull $openvSwitchHyperVDir "https://github.com/cloudbase/ovs.git" $OVSGitBranch
     }
 
     $thirdPartyBaseDir = "$openvSwitchHyperVDir\windows\thirdparty"
