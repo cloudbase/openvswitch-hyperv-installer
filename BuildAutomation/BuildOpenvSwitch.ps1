@@ -126,8 +126,11 @@ exit
 
     #We will copy both Win8/8.1 release since the installer will automatically
     #choose which version should be installed
-    $driverOutputPath = "$outputPath\openvswitch_driver\Win8.1"
-    mkdir $driverOutputPath
+    $driverOutputPath_2012_r2 = "$outputPath\openvswitch_driver\Win8.1"
+    mkdir $driverOutputPath_2012_r2
+
+    $driverOutputPath_2012 = "$outputPath\openvswitch_driver\Win8"
+    mkdir $driverOutputPath_2012
 
     $sysFileName = "ovsext.sys"
     $infFileName = "ovsext.inf"
@@ -138,30 +141,13 @@ exit
     {
         cd "$openvSwitchHyperVDir\datapath-windows"
 
-        copy -Force "x64\Win8.1Release\package\$sysFileName" $driverOutputPath
-        copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath
-        copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath
+        copy -Force "x64\Win8.1Release\package\$sysFileName" $driverOutputPath_2012_r2
+        copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath_2012_r2
+        copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath_2012_r2
         copy -Force "ovsext\x64\Win8.1Release\*.pdb" $outputSymbolsPath
-    }
-    finally
-    {
-        popd
-    }
-    $driverOutputPath = "$outputPath\openvswitch_driver\Win8"
-    mkdir $driverOutputPath
-
-    $sysFileName = "ovsext.sys"
-    $infFileName = "ovsext.inf"
-    $catFileName = "ovsext.cat"
-
-    pushd .
-    try
-    {
-        cd "$openvSwitchHyperVDir\datapath-windows"
-
-        copy -Force "x64\Win8Release\package\$sysFileName" $driverOutputPath
-        copy -Force "x64\Win8Release\package\$infFileName" $driverOutputPath
-        copy -Force "x64\Win8Release\package\$catFileName" $driverOutputPath
+        copy -Force "x64\Win8Release\package\$sysFileName" $driverOutputPath_2012
+        copy -Force "x64\Win8Release\package\$infFileName" $driverOutputPath_2012
+        copy -Force "x64\Win8Release\package\$catFileName" $driverOutputPath_2012
         copy -Force "ovsext\x64\Win8Release\*.pdb" $outputSymbolsPath
     }
     finally
@@ -177,8 +163,13 @@ exit
     if($SignX509Thumbprint)
     {
         ExecRetry {
-            Write-Host "Signing driver with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$sysFileName"
+            Write-Host "Signing 2012 R2 driver with certificate: $SignX509Thumbprint"
+            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012_r2\$sysFileName"
+            if ($LastExitCode) { throw "signtool failed" }
+        }
+        ExecRetry {
+            Write-Host "Signing 2012 driver with certificate: $SignX509Thumbprint"
+            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012\$sysFileName"
             if ($LastExitCode) { throw "signtool failed" }
         }
     }
@@ -187,14 +178,21 @@ exit
         Write-Warning "Driver not signed since the X509 thumbprint has not been specified!"
     }
 
-    &inf2cat.exe /driver:$driverOutputPath /os:8_x64
+    &inf2cat.exe /driver:$driverOutputPath_2012_r2 /os:Server6_3_X64
+    if ($LastExitCode) { throw "inf2cat failed" }
+    &inf2cat.exe /driver:$driverOutputPath_2012 /os:Server8_X64
     if ($LastExitCode) { throw "inf2cat failed" }
 
     if($SignX509Thumbprint)
     {
         ExecRetry {
-            Write-Host "Signing CAT file with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath\$catFileName"
+            Write-Host "Signing 2012 R2 CAT file with certificate: $SignX509Thumbprint"
+            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012_r2\$catFileName"
+            if ($LastExitCode) { throw "signtool failed" }
+        }
+        ExecRetry {
+            Write-Host "Signing 2012 CAT file with certificate: $SignX509Thumbprint"
+            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012\$catFileName"
             if ($LastExitCode) { throw "signtool failed" }
         }
     }
