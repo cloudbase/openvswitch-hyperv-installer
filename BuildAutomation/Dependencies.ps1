@@ -2,7 +2,7 @@ $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 . "$scriptPath\BuildUtils.ps1"
 
 
-function BuildOpenSSL($buildDir, $outputPath, $opensslVersion, $cmakeGenerator, $platformToolset,
+function BuildOpenSSL($buildDir, $outputPath, $opensslVersion, $platform, $cmakeGenerator, $platformToolset,
                       $dllBuild=$true, $runTests=$true, $hash=$null)
 {
     $opensslBase = "openssl-$opensslVersion"
@@ -26,11 +26,24 @@ function BuildOpenSSL($buildDir, $outputPath, $opensslVersion, $cmakeGenerator, 
         cd $opensslBase
         &cmake . -G $cmakeGenerator -T $platformToolset
 
-        &perl Configure VC-WIN32 --prefix="$ENV:OPENSSL_ROOT_DIR"
+        $platformMap = @{"x86"="VC-WIN32"; "amd64"="VC-WIN64A"}
+        &perl Configure $platformMap[$platform] --prefix="$ENV:OPENSSL_ROOT_DIR"
         if ($LastExitCode) { throw "perl failed" }
 
-        &.\ms\do_nasm
-        if ($LastExitCode) { throw "do_nasm failed" }
+        if($platform -eq "amd64")
+        {
+            &.\ms\do_win64a
+            if ($LastExitCode) { throw "do_win64 failed" }
+        }
+        elseif($platform -eq "x86")
+        {
+            &.\ms\do_nasm
+            if ($LastExitCode) { throw "do_nasm failed" }
+        }
+        else
+        {
+            throw "Invalid platform: $platform"
+        }
 
         if($dllBuild)
         {
