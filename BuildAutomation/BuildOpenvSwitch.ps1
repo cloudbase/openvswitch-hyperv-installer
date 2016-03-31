@@ -1,5 +1,5 @@
 Param(
-  [string]$OVSGitBranch = "branch-2.4-ovs",
+  [string]$OVSGitBranch = "branch-2.5-cloudbase",
   [string]$SignX509Thumbprint
 )
 
@@ -21,20 +21,29 @@ $ENV:PATH += ";${ENV:ProgramFiles(x86)}\CMake 2.8\bin"
 $ENV:PATH += ";${ENV:ProgramFiles(x86)}\nasm"
 $ENV:PATH += ";C:\Python27"
 
-$mingwBaseDir = "C:\MinGW"
+# Try to use MSYS2 first. Ensure to have the following:
+# pacman -S binutils make autoconf automake libtool
+$msysBinDir = "C:\msys64\usr\bin"
+if(!(Test-Path $msysBinDir))
+{
+	$msysBinDir = "C:\MinGW\msys\1.0\bin"
+}
 
 $vsVersion = "12.0"
 
-$cmakeGenerator = "Visual Studio $($vsVersion.Split(".")[0])"
+$platform = "x86_amd64"
+
+$cmakePlatformMap = @{"x86"=""; "amd64"=" Win64"; "x86_amd64"=" Win64"}
+$cmakeGenerator = "Visual Studio $($vsVersion.Split(".")[0])$($cmakePlatformMap[$platform])"
 $platformToolset = "v$($vsVersion.Replace('.', ''))"
 
-SetVCVars $vsVersion
+SetVCVars $vsVersion $platform
 
 $pthreadsWin32Base = "pthreads-w32-2-9-1-release"
 $pthreadsWin32MD5 = "a3cb284ba0914c9d26e0954f60341354"
 
-$opensslVersion = "1.0.2d"
-$opensslSha1 = "d01d17b44663e8ffa6a33a5a30053779d9593c3d"
+$opensslVersion = "1.0.2g"
+$opensslSha1 = "36af23887402a5ea4ebef91df8e61654906f58f2"
 
 $basePath = "C:\OpenStack\build\OpenvSwitch"
 $buildDir = "$basePath\Build"
@@ -56,7 +65,7 @@ try
     mkdir $outputSymbolsPath
     cd $buildDir
     mkdir $outputPath
-    BuildOpenSSL $buildDir $outputPath $opensslVersion $cmakeGenerator $platformToolset $true $true $opensslSha1
+    BuildOpenSSL $buildDir $outputPath $opensslVersion $platform $cmakeGenerator $platformToolset $true $true $opensslSha1
     BuildPthreadsW32 $buildDir $outputPath $pthreadsWin32Base $pthreadsWin32MD5
 
     $openvSwitchHyperVDir = "ovs"
@@ -67,7 +76,9 @@ try
     }
 
     $thirdPartyBaseDir = "$openvSwitchHyperVDir\windows\thirdparty"
-    $winPthreadLibDir = "$thirdPartyBaseDir\winpthread\lib\x86"
+
+    $automakePlatformMap = @{"x86"="x86"; "amd64"="x64"; "x86_amd64"="x64"}
+    $winPthreadLibDir = "$thirdPartyBaseDir\winpthread\lib\$($automakePlatformMap[$platform])"
 
     CheckDir $winPthreadLibDir
 
@@ -75,7 +86,7 @@ try
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
     copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
 
-    #automake already appends \lib\x86 to the pthread library
+    #automake already appends \lib\<platform> to the pthread library
     $winPthreadLibDir = "$thirdPartyBaseDir\winpthread"
 
     pushd .
@@ -92,8 +103,9 @@ try
 #!/bin/bash
 set -e
 cd $msysCwd
+echo `$INCLUDE
 ./boot.sh
-./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32 -liphlpapi" --prefix="C:/ProgramData/openvswitch" \
+./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32 -liphlpapi -lwbemuuid -lole32 -loleaut32" --prefix="C:/ProgramData/openvswitch" \
 --localstatedir="C:/ProgramData/openvswitch" --sysconfdir="C:/ProgramData/openvswitch" \
 --with-pthread="$pthreadDir" --with-vstudiotarget="Release"
 make clean && make
@@ -104,8 +116,8 @@ exit
         $msysScriptPath = Join-Path $pwd "build.sh"
         $msysScript.Replace("`r`n","`n") | Set-Content $msysScriptPath -Force
 
-        $ENV:PATH = "$mingwBaseDir\msys\1.0\bin\;$ENV:PATH"
-        &sh --login -i $msysScriptPath
+        $ENV:PATH = "$msysBinDir;$ENV:PATH"
+        &bash.exe $msysScriptPath
         if ($LastExitCode) { throw "build.sh failed" }
 
         del $msysScriptPath
