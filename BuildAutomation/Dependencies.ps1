@@ -26,11 +26,11 @@ function BuildOpenSSL($buildDir, $outputPath, $opensslVersion, $platform, $cmake
         cd $opensslBase
         &cmake . -G $cmakeGenerator -T $platformToolset
 
-        $platformMap = @{"x86"="VC-WIN32"; "amd64"="VC-WIN64A"}
+        $platformMap = @{"x86"="VC-WIN32"; "amd64"="VC-WIN64A"; "x86_amd64"="VC-WIN64A"}
         &perl Configure $platformMap[$platform] --prefix="$ENV:OPENSSL_ROOT_DIR"
         if ($LastExitCode) { throw "perl failed" }
 
-        if($platform -eq "amd64")
+        if($platform -eq "amd64" -or $platform -eq "x86_amd64")
         {
             &.\ms\do_win64a
             if ($LastExitCode) { throw "do_win64 failed" }
