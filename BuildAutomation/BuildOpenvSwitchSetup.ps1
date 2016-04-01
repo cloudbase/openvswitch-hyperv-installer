@@ -53,7 +53,7 @@ try
     mkdir $ovsServicesBinDir
     move -Force "$ovsCliBinDir\ovsdb-server.exe" $ovsServicesBinDir
     move -Force "$ovsCliBinDir\ovs-vswitchd.exe" $ovsServicesBinDir
-    copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir	
+    copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir
     copy -Force "$buildOutputDir\OVS.psm1" $msi_project_dir
 
     CheckRemoveDir $ovsDriverBinDir
@@ -68,7 +68,7 @@ try
     try
     {
         cd $solution_dir
-        &msbuild openvswitch-hyperv-installer.sln /p:Platform=x86 /p:Configuration=Release
+        &msbuild openvswitch-hyperv-installer.sln /p:Platform=x64 /p:Configuration=Release
         if ($LastExitCode) { throw "MSBuild failed" }
     }
     finally
