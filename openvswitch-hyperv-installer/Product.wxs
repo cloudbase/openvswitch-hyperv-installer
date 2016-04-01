@@ -18,7 +18,7 @@
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="{C266B26F-77D5-4A95-9BC6-E319D155025E}" Name="Open vSwitch for Hyper-V" Language="1033" Version="2.5.0.0"
+  <Product Id="{C266B26F-77D5-4A95-9BC6-E319D155025E}" Name="Open vSwitch for Hyper-V 2.5" Language="1033" Version="2.5.0.0"
            Manufacturer="Cloudbase Solutions Srl" UpgradeCode="da802b12-433d-4742-a7ae-783aa0c48222">
     <Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" Platform="x64" />
     <Condition Message="This product is only supported on Windows Server / Hyper-V Server 2012 or higher.">
