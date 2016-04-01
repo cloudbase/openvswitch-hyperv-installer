@@ -23,7 +23,8 @@ try
     # Needed for SSH
     $ENV:HOME = $ENV:USERPROFILE
 
-    SetVCVars
+    $platform = "x86_amd64"
+    SetVCVars $platform
 
     $solution_dir = "openvswitch-hyperv-installer"
 
