@@ -26,7 +26,7 @@ $ENV:PATH += ";C:\Python27"
 $msysBinDir = "C:\msys64\usr\bin"
 if(!(Test-Path $msysBinDir))
 {
-	$msysBinDir = "C:\MinGW\msys\1.0\bin"
+    $msysBinDir = "C:\MinGW\msys\1.0\bin"
 }
 
 $vsVersion = "12.0"
@@ -81,9 +81,10 @@ try
     $winPthreadLibDir = "$thirdPartyBaseDir\winpthread\lib\$($automakePlatformMap[$platform])"
 
     CheckDir $winPthreadLibDir
-
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\libeay32.lib" $thirdPartyBaseDir
     copy -Force "$buildDir\openssl-$opensslVersion\out32dll\ssleay32.lib" $thirdPartyBaseDir
+    mv "$buildDir\openssl-$opensslVersion\include" "$buildDir\openssl-$opensslVersion\include_linux"
+    mv "$buildDir\openssl-$opensslVersion\inc32" "$buildDir\openssl-$opensslVersion\include"
     copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
 
     #automake already appends \lib\<platform> to the pthread library
@@ -96,6 +97,7 @@ try
 
         $msysCwd = "/" + $pwd.path.Replace("\", "/").Replace(":", "")
         $pthreadDir = ($buildDir + "\" + $winPthreadLibDir).Replace("\", "/")
+        $opensslDir = ($buildDir + "\openssl-$opensslVersion\").Replace("\", "/")
         # This must be the Visual Studio version of link.exe, not MinGW
         $vsLinkPath = $(Get-Command link.exe).path
 
@@ -107,7 +109,7 @@ echo `$INCLUDE
 ./boot.sh
 ./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32 -liphlpapi -lwbemuuid -lole32 -loleaut32" --prefix="C:/ProgramData/openvswitch" \
 --localstatedir="C:/ProgramData/openvswitch" --sysconfdir="C:/ProgramData/openvswitch" \
---with-pthread="$pthreadDir" --with-vstudiotarget="Release"
+--with-pthread="$pthreadDir" --with-vstudiotarget="Release" --enable-ssl --with-openssl="$opensslDir"
 make clean && make
 exit
 "@
