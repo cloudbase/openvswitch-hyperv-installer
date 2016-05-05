@@ -14,7 +14,7 @@ function BuildOpenSSL($buildDir, $outputPath, $opensslVersion, $platform, $cmake
     {
         cd $buildDir
 
-        ExecRetry { (new-object System.Net.WebClient).DownloadFile($opensslUrl, $opensslPath) }
+        ExecRetry { Start-BitsTransfer -Source $opensslUrl -Destination $opensslPath }
 
         if($hash) { ChechFileHash $opensslPath $hash }
 
