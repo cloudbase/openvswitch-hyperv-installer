@@ -86,6 +86,7 @@ try
     mv "$buildDir\openssl-$opensslVersion\include" "$buildDir\openssl-$opensslVersion\include_linux"
     mv "$buildDir\openssl-$opensslVersion\inc32" "$buildDir\openssl-$opensslVersion\include"
     copy -Force "$buildDir\$pthreadsWin32Base\pthreads.2\pthreadVC2.lib" $winPthreadLibDir
+    mv "$buildDir\openssl-$opensslVersion\out32dll" "$buildDir\openssl-$opensslVersion\lib"
 
     #automake already appends \lib\<platform> to the pthread library
     $winPthreadLibDir = "$thirdPartyBaseDir\winpthread"
