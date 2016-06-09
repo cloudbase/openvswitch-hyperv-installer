@@ -21,6 +21,10 @@
   <Product Id="{CD108C7E-7BED-4BA2-8CFA-8E8778E7A278}" Name="Open vSwitch for Hyper-V 2.5" Language="1033" Version="2.5.0.1"
            Manufacturer="Cloudbase Solutions Srl" UpgradeCode="da802b12-433d-4742-a7ae-783aa0c48222">
     <Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" Platform="x64" />
+       <Property Id='ExtensionType' Value='Forwarding' />
+       <Property Id='Description' Value='Open vSwitch Extension' />
+       <Property Id='DriverVersion' Value='2.5.0.1' />
+       <Property Id='DriverID' Value='{583CC151-73EC-4A6A-8B47-578297AD7623}' />
     <Condition Message="This product is only supported on Windows Server / Hyper-V Server 2012 or higher.">
        <![CDATA[Installed OR (VersionNT >= 602)]]>
     </Condition>
