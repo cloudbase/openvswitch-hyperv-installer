@@ -150,6 +150,7 @@ exit
     $sysFileName = "ovsext.sys"
     $infFileName = "ovsext.inf"
     $catFileName = "ovsext.cat"
+    $pdbDriverFileName = "OVSExt.pdb"
 
     pushd .
     try
@@ -159,11 +160,11 @@ exit
         copy -Force "x64\Win8.1Release\package\$sysFileName" $driverOutputPath_2012_r2
         copy -Force "x64\Win8.1Release\package\$infFileName" $driverOutputPath_2012_r2
         copy -Force "x64\Win8.1Release\package\$catFileName" $driverOutputPath_2012_r2
-        copy -Force "ovsext\x64\Win8.1Release\*.pdb" $outputSymbolsPath
+        copy -Force "ovsext\x64\Win8.1Release\$pdbDriverFileName" $driverOutputPath_2012_r2
         copy -Force "x64\Win8Release\package\$sysFileName" $driverOutputPath_2012
         copy -Force "x64\Win8Release\package\$infFileName" $driverOutputPath_2012
         copy -Force "x64\Win8Release\package\$catFileName" $driverOutputPath_2012
-        copy -Force "ovsext\x64\Win8Release\*.pdb" $outputSymbolsPath
+        copy -Force "ovsext\x64\Win8Release\$pdbDriverFileName" $driverOutputPath_2012
     }
     finally
     {
