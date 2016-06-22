@@ -239,12 +239,14 @@
           <File Id='win8_ovsext.sys' Name='ovsext.sys' DiskId='1' Source='Driver\Win8\ovsext.sys' Checksum='yes' KeyPath='yes' />
           <File Id='win8_ovsext.inf' Name='ovsext.inf' DiskId='1' Source='Driver\Win8\ovsext.inf' Checksum='yes' />
           <File Id='win8_ovsext.cat' Name='ovsext.cat' DiskId='1' Source='Driver\Win8\ovsext.cat' Checksum='yes' />
+          <File Id='win8_ovsext.pdb' Name='OVSExt.pdb' DiskId='1' Source='Driver\Win8\OVSExt.pdb' Checksum='yes' />
      </Component>
      <Component Id='OpenvSwitchDriver_Win8.1' Guid='{7A1E2446-8196-4738-8362-5CFD55896A7C}'>
         <Condition><![CDATA[VersionNT >= "603"]]></Condition>
           <File Id='win81_ovsext.sys' Name='ovsext.sys' DiskId='1' Source='Driver\Win8.1\ovsext.sys' Checksum='yes' KeyPath='yes'/>
           <File Id='win81_ovsext.inf' Name='ovsext.inf' DiskId='1' Source='Driver\Win8.1\ovsext.inf' Checksum='yes' />
           <File Id='win81_ovsext.cat' Name='ovsext.cat' DiskId='1' Source='Driver\Win8.1\ovsext.cat' Checksum='yes' />
+          <File Id='win81_ovsext.pdb' Name='OVSExt.pdb' DiskId='1' Source='Driver\Win8.1\OVSExt.pdb' Checksum='yes' />
       </Component>
     </DirectoryRef>
   </Fragment>
