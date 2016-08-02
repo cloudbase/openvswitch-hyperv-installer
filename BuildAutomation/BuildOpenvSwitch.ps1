@@ -1,6 +1,8 @@
 Param(
   [string]$OVSGitBranch = "branch-2.5-cloudbase",
-  [string]$SignX509Thumbprint
+  [string]$SignX509Thumbprint,
+  [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
+  [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer"
 )
 
 $ErrorActionPreference = "Stop"
@@ -173,20 +175,19 @@ exit
 
     copy -Force "$openvSwitchHyperVDir\datapath-windows\misc\OVS.psm1" $outputPath
 
-    # See: https://knowledge.verisign.com/support/code-signing-support/index?page=content&id=SO5820&act=RATE&viewlocale=en_US&newguid=015203267fad9a701464fd90342007e8d
-    $crossCertPath = "$scriptPath\After_10-10-10_MSCV-VSClass3.cer"
+    # For signing info, see:
+    # https://knowledge.symantec.com/support/code-signing-support/index?page=content&id=SO5820
+    # https://support.globalsign.com/customer/portal/articles/1698751-ev-code-signing-for-windows-7-and-8
 
     if($SignX509Thumbprint)
     {
         ExecRetry {
             Write-Host "Signing 2012 R2 driver with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012_r2\$sysFileName"
-            if ($LastExitCode) { throw "signtool failed" }
+            SignTool $SignCrossCertPath $SignX509Thumbprint $SignTimestampUrl "$driverOutputPath_2012_r2\$sysFileName"
         }
         ExecRetry {
             Write-Host "Signing 2012 driver with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012\$sysFileName"
-            if ($LastExitCode) { throw "signtool failed" }
+            SignTool $SignX509Thumbprint $SignTimestampUrl "$driverOutputPath_2012\$sysFileName"
         }
     }
     else
@@ -203,12 +204,11 @@ exit
     {
         ExecRetry {
             Write-Host "Signing 2012 R2 CAT file with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012_r2\$catFileName"
-            if ($LastExitCode) { throw "signtool failed" }
+            SignTool $SignCrossCertPath $SignX509Thumbprint $SignTimestampUrl "$driverOutputPath_2012_r2\$catFileName"
         }
         ExecRetry {
             Write-Host "Signing 2012 CAT file with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /ac "$crossCertPath" /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v "$driverOutputPath_2012\$catFileName"
+            SignTool $SignCrossCertPath $SignX509Thumbprint $SignTimestampUrl "$driverOutputPath_2012\$catFileName"
             if ($LastExitCode) { throw "signtool failed" }
         }
     }

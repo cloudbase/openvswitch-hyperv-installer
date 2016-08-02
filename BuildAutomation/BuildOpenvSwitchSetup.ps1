@@ -1,5 +1,7 @@
 Param(
-  [string]$SignX509Thumbprint
+  [string]$SignX509Thumbprint,
+  [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
+  [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer"
 )
 
 $ErrorActionPreference = "Stop"
@@ -84,8 +86,7 @@ try
     {
         ExecRetry {
             Write-Host "Signing MSI with certificate: $SignX509Thumbprint"
-            &signtool.exe sign /sha1 $SignX509Thumbprint /t http://timestamp.verisign.com/scripts/timstamp.dll /v $msi_path
-            if ($LastExitCode) { throw "signtool failed" }
+            SignTool $SignCrossCertPath $SignX509Thumbprint $SignTimestampUrl $msi_path
         }
     }
     else

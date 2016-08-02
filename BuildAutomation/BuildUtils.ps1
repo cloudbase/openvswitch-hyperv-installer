@@ -370,3 +370,8 @@ function ChechFileHash($path, $hash, $algorithm="SHA1") {
         throw "Hash comparison failed for file: $path"
     }
 }
+
+function SignTool($crossCertPath, $signX509Thumbprint, $timestampUrl, $path) {
+    & signtool sign /ac "$crossCertPath" /sha1 "$signX509Thumbprint" /tr "$timestampUrl" /td SHA256 /v "$path"
+    if ($LastExitCode) { throw "signtool failed" }
+}
