@@ -187,7 +187,7 @@ exit
         }
         ExecRetry {
             Write-Host "Signing 2012 driver with certificate: $SignX509Thumbprint"
-            SignTool $SignX509Thumbprint $SignTimestampUrl "$driverOutputPath_2012\$sysFileName"
+            SignTool $SignCrossCertPath $SignX509Thumbprint $SignTimestampUrl "$driverOutputPath_2012\$sysFileName"
         }
     }
     else
