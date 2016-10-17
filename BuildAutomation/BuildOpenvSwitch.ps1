@@ -195,9 +195,9 @@ exit
         Write-Warning "Driver not signed since the X509 thumbprint has not been specified!"
     }
 
-    &inf2cat.exe /driver:$driverOutputPath_2012_r2 /os:Server6_3_X64
+    &inf2cat.exe /driver:$driverOutputPath_2012_r2 /os:Server6_3_X64 /uselocaltime
     if ($LastExitCode) { throw "inf2cat failed" }
-    &inf2cat.exe /driver:$driverOutputPath_2012 /os:Server8_X64
+    &inf2cat.exe /driver:$driverOutputPath_2012 /os:Server8_X64 /uselocaltime
     if ($LastExitCode) { throw "inf2cat failed" }
 
     if($SignX509Thumbprint)
