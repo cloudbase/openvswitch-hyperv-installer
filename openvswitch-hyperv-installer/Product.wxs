@@ -18,7 +18,7 @@
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="{A5CE0CD6-AABF-42AB-B52D-077492FF41A5}" Name="Cloudbase Open vSwitch&#174; for Windows&#169; 2.5" Language="1033" Version="2.5.1.0"
+  <Product Id="{A5CE0CD6-AABF-42AB-B52D-077492FF41A5}" Name="Cloudbase Open vSwitch&#8482; for Windows&#174; 2.5" Language="1033" Version="2.5.1.0"
            Manufacturer="Cloudbase Solutions Srl" UpgradeCode="da802b12-433d-4742-a7ae-783aa0c48222">
     <Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" Platform="x64" />
        <Property Id='ExtensionType' Value='Forwarding' />
