@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  <String Id="LicenseAgreementDlgDescription" Overridable="yes">{\White_Normal}Please read the following license agreement carefully</String>
+  <String Id="MaintenanceWelcomeDlgDescription" Overridable="yes">{\White_Normal}The Setup Wizard allows you to change the way [ProductName] features are installed on your computer or to remove it from your computer. Click Next to continue or Cancel to exit the Setup Wizard.</String>
+  <String Id="WelcomeDlgDescription" Overridable="yes">{\White_Normal}This will install [ProductName] [ProductVersion] on your computer. Click Next to continue or Cancel to exit Setup.</String>
+  <String Id="WelcomeDlgLinuxFoundation" Overridable="yes">{\White_Normal}Open vSwitch and OvS are trademarks of The Linux Foundation.</String>
+  <String Id="UserExitDescription1" Overridable="yes">{\White_Normal}[ProductName] Setup was interrupted. Your system has not been modified. To install this program at a later time, please run the installation again.</String>
+  <String Id="UserExitDescription2" Overridable="yes">Click the Finish button to exit the Setup Wizard.</String>
+  <String Id="ExitDialogDescription" Overridable="yes">{\White_Normal}Click the Finish button to exit the Setup Wizard.</String>
+  <String Id="FilesInUseDescription" Overridable="yes">{\White_Normal}Some files that need to be updated are currently in use.</String>
+  <String Id="CustomizeDlgItemDescription" Overridable="yes">{\White_Normal}CustomizeDlgItemDescription-CustomizeDlgItemDescription</String>
+  <String Id="BrowseDlgDescription" Overridable="yes">{\White_Normal}Browse to the destination folder</String>
+  <String Id="CustomizeDlgDescription" Overridable="yes">{\White_Normal}Select the way you want features to be installed.</String>
+  <String Id="MaintenanceTypeDlgDescription" Overridable="yes">{\White_Normal}Select the operation you wish to perform.</String>
+  <String Id="DiskCostDlgDescription" Overridable="yes">{\White_Normal}The disk space required for the installation of the selected features.</String>
+</WixLocalization>
