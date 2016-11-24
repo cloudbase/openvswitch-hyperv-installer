@@ -33,7 +33,7 @@
     <MediaTemplate EmbedCab="yes" CompressionLevel="mszip" />
 
     <Feature Id="OpenvSwitchCLI" Title="Open vSwitch CLI" Level="1" Absent="disallow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-             Description="Installs the Cloudbase Open vSwitch command line tools."
+             Description="{\WixUI_Font_Normal}Installs the Cloudbase Open vSwitch command line tools."
              ConfigurableDirectory="INSTALLDIR" Display="expand">
       <ComponentGroupRef Id="BinariesComponentGroup" />
       <ComponentGroupRef Id="SymbolsComponentGroup" />
@@ -46,7 +46,7 @@
     </Feature>
 
     <Feature Id="OpenvSwitchDriver" Title="Open vSwitch Windows driver" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-             Description="Installs the Cloudbase Open vSwitch Windows switch extension driver." Display="expand">
+             Description="{\WixUI_Font_Normal}Installs the Cloudbase Open vSwitch Windows switch extension driver." Display="expand">
       <ComponentRef Id="OpenvSwitchDriver_Win8" />
       <ComponentRef Id="OpenvSwitchDriver_Win8.1" />
       <ComponentRef Id="ConfDir" />
