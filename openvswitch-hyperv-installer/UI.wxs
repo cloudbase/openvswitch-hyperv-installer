@@ -19,9 +19,10 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <UI Id="MyWixUI_FeatureTree">
-      <TextStyle Id="WixUI_Font_Normal" FaceName="Arial" Size="8" />
-      <TextStyle Id="WixUI_Font_Bigger" FaceName="Arial" Size="12" Bold="yes" />
-      <TextStyle Id="WixUI_Font_Title" FaceName="Arial" Size="9" Bold="yes" />
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Arial" Size="8" Red="0" Green="0" Blue="0"/>
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Arial" Size="12" Bold="yes" Red="255" Green="255" Blue="255"/>
+      <TextStyle Id="WixUI_Font_Title" FaceName="Arial" Size="9" Bold="yes" Red="255" Green="255" Blue="255"/>
+      <TextStyle Id="White_Normal" FaceName="Arial" Size="8" Red="255" Green="255" Blue="255"/>
 
       <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
       <Property Id="WixUI_Mode" Value="FeatureTree" />

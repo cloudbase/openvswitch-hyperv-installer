@@ -18,12 +18,12 @@
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-  <Product Id="{A5CE0CD6-AABF-42AB-B52D-077492FF41A5}" Name="Cloudbase Open vSwitch&#8482; for Windows&#174; 2.5" Language="1033" Version="2.5.1.0"
+  <Product Id="{A5CE0CD6-AABF-42AB-B52D-077492FF41A6}" Name="Cloudbase Open vSwitch&#8482; for Windows&#174;" Language="1033" Version="2.6.1.0"
            Manufacturer="Cloudbase Solutions Srl" UpgradeCode="da802b12-433d-4742-a7ae-783aa0c48222">
     <Package InstallerVersion="405" Compressed="yes" InstallScope="perMachine" InstallPrivileges="elevated" Platform="x64" />
        <Property Id='ExtensionType' Value='Forwarding' />
        <Property Id='Description' Value='Open vSwitch Extension' />
-       <Property Id='DriverVersion' Value='2.5.1.0' />
+       <Property Id='DriverVersion' Value='2.6.1.0' />
        <Property Id='DriverID' Value='{583CC151-73EC-4A6A-8B47-578297AD7623}' />
     <Condition Message="This product is only supported on Windows Server / Hyper-V Server 2012 or higher.">
        <![CDATA[Installed OR (VersionNT >= 602)]]>

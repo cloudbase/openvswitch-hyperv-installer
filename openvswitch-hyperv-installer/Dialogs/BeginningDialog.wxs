@@ -26,7 +26,7 @@
           <Condition Action="show">NOT Installed OR NOT PATCH</Condition>
           <Condition Action="hide">Installed AND PATCH</Condition>
         </Control>
-        <Control Id="Description1" Type="Text" X="135" Y="120" Width="212" Height="60" Transparent="yes" NoPrefix="yes" Text="Open vSwitch and OvS are trademarks of The Linux Foundation.">
+        <Control Id="Description1" Type="Text" X="135" Y="120" Width="212" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeDlgLinuxFoundation)">
         </Control>
         <Control Id="PatchDescription" Type="Text" X="135" Y="80" Width="212" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.WelcomeUpdateDlgDescriptionUpdate)">
           <Condition Action="show">Installed AND PATCH</Condition>
