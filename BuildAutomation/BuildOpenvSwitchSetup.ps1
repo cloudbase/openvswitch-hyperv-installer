@@ -1,4 +1,6 @@
 Param(
+  [string]$Branch = "2.5",
+  [string]$OVSGitBranch = "branch-2.5-cloudbase",
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
   [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer"
@@ -13,7 +15,7 @@ Install requirements first, see: Installrequirements.ps1
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 . "$scriptPath\BuildUtils.ps1"
 
-$basePath = "C:\OpenStack\build\OpenvSwitch"
+$basePath = "C:\Build\OpenvSwitch_${OVSGitBranch}"
 
 CheckDir $basePath
 pushd .
@@ -33,7 +35,7 @@ try
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
-        GitClonePull $solution_dir "git@github.com:/cloudbase/openvswitch-hyperv-installer.git"
+        GitClonePull $solution_dir "git@github.com:/cloudbase/openvswitch-hyperv-installer.git" $Branch
     }
 
     $msi_project_dir = "$solution_dir\openvswitch-hyperv-installer"
@@ -80,7 +82,7 @@ try
         popd
     }
 
-    $msi_path = "$msi_project_dir\bin\Release\OpenvSwitch.msi"
+    $msi_path = "$msi_project_dir\bin\x64\Release\OpenvSwitch.msi"
 
     if($SignX509Thumbprint)
     {
