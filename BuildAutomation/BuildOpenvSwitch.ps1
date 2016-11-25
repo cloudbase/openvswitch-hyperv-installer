@@ -47,7 +47,7 @@ $pthreadsWin32MD5 = "a3cb284ba0914c9d26e0954f60341354"
 $opensslVersion = "1.0.2j"
 $opensslSha1 = "bdfbdb416942f666865fa48fe13c2d0e588df54f"
 
-$basePath = "C:\OpenStack\build\OpenvSwitch"
+$basePath = "C:\Build\OpenvSwitch_${OVSGitBranch}"
 $buildDir = "$basePath\Build"
 $outputPath = "$buildDir\bin"
 $outputSymbolsPath = "$buildDir\symbols"
