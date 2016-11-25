@@ -1,6 +1,6 @@
 Param(
-  [string]$Branch = "2.5",
-  [string]$OVSGitBranch = "branch-2.5-cloudbase",
+  [string]$Branch = "master",
+  [string]$OVSGitBranch = "branch-2.6-cloudbase",
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
   [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer"
@@ -82,7 +82,7 @@ try
         popd
     }
 
-    $msi_path = "$msi_project_dir\bin\x64\Release\OpenvSwitch.msi"
+    $msi_path = "$msi_project_dir\bin\x64\Release\en-us\OpenvSwitch.msi"
 
     if($SignX509Thumbprint)
     {
