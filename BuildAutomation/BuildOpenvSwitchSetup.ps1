@@ -1,9 +1,10 @@
 Param(
   [string]$Branch = "master",
-  [string]$OVSGitBranch = "branch-2.6-cloudbase",
+  [string]$OVSGitBranch = "branch-2.7-cloudbase",
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
-  [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer"
+  [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer",
+  [string]$OvsVersion = "2.7.0"
 )
 
 $ErrorActionPreference = "Stop"
@@ -74,7 +75,7 @@ try
     try
     {
         cd $solution_dir
-        &msbuild openvswitch-hyperv-installer.sln /p:Platform=x64 /p:Configuration=Release
+        &msbuild openvswitch-hyperv-installer.sln /p:Platform=x64 /p:Configuration=Release /property:Version="$OvsVersion"
         if ($LastExitCode) { throw "MSBuild failed" }
     }
     finally
