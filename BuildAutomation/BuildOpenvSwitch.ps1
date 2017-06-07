@@ -1,5 +1,5 @@
 Param(
-  [string]$OVSGitBranch = "branch-2.6-cloudbase",
+  [string]$OVSGitBranch = "branch-2.7-cloudbase",
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
   [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer"
