@@ -44,8 +44,8 @@ SetVCVars $vsVersion $platform
 $pthreadsWin32Base = "pthreads-w32-2-9-1-release"
 $pthreadsWin32MD5 = "a3cb284ba0914c9d26e0954f60341354"
 
-$opensslVersion = "1.0.2j"
-$opensslSha1 = "bdfbdb416942f666865fa48fe13c2d0e588df54f"
+$opensslVersion = "1.0.2l"
+$opensslSha1 = "b58d5d0e9cea20e571d903aafa853e2ccd914138"
 
 $basePath = "C:\Build\OpenvSwitch_${OVSGitBranch}"
 $buildDir = "$basePath\Build"
