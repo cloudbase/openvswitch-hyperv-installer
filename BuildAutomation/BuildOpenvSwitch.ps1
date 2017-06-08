@@ -44,8 +44,8 @@ SetVCVars $vsVersion $platform
 $pthreadsWin32Base = "pthreads-w32-2-9-1-release"
 $pthreadsWin32MD5 = "a3cb284ba0914c9d26e0954f60341354"
 
-$opensslVersion = "1.0.2j"
-$opensslSha1 = "bdfbdb416942f666865fa48fe13c2d0e588df54f"
+$opensslVersion = "1.0.2l"
+$opensslSha1 = "b58d5d0e9cea20e571d903aafa853e2ccd914138"
 
 $basePath = "C:\Build\OpenvSwitch_${OVSGitBranch}"
 $buildDir = "$basePath\Build"
@@ -131,10 +131,18 @@ exit
         copy -Force ".\vswitchd\*.exe" $outputPath
         copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
         copy -Force ".\utilities\*.exe" $outputPath
+        copy -Force ".\ovn\ovn-nb.ovsschema" $outputPath
+        copy -Force ".\ovn\ovn-sb.ovsschema" $outputPath
+        copy -Force ".\ovn\controller\*.exe" $outputPath
+        copy -Force ".\ovn\northd\*.exe" $outputPath
+        copy -Force ".\ovn\utilities\*.exe" $outputPath
 
         copy -Force ".\ovsdb\*.pdb" $outputSymbolsPath
         copy -Force ".\vswitchd\*.pdb" $outputSymbolsPath
         copy -Force ".\utilities\*.pdb" $outputSymbolsPath
+        copy -Force ".\ovn\controller\*.pdb" $outputSymbolsPath
+        copy -Force ".\ovn\northd\*.pdb" $outputSymbolsPath
+        copy -Force ".\ovn\utilities\*.pdb" $outputSymbolsPath
     }
     finally
     {
