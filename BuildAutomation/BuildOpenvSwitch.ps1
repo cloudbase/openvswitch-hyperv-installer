@@ -131,10 +131,18 @@ exit
         copy -Force ".\vswitchd\*.exe" $outputPath
         copy -Force ".\vswitchd\vswitch.ovsschema" $outputPath
         copy -Force ".\utilities\*.exe" $outputPath
+        copy -Force ".\ovn\ovn-nb.ovsschema" $outputPath
+        copy -Force ".\ovn\ovn-sb.ovsschema" $outputPath
+        copy -Force ".\ovn\controller\*.exe" $outputPath
+        copy -Force ".\ovn\northd\*.exe" $outputPath
+        copy -Force ".\ovn\utilities\*.exe" $outputPath
 
         copy -Force ".\ovsdb\*.pdb" $outputSymbolsPath
         copy -Force ".\vswitchd\*.pdb" $outputSymbolsPath
         copy -Force ".\utilities\*.pdb" $outputSymbolsPath
+        copy -Force ".\ovn\controller\*.pdb" $outputSymbolsPath
+        copy -Force ".\ovn\northd\*.pdb" $outputSymbolsPath
+        copy -Force ".\ovn\utilities\*.pdb" $outputSymbolsPath
     }
     finally
     {
