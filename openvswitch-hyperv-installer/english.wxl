@@ -13,4 +13,5 @@
   <String Id="CustomizeDlgDescription" Overridable="yes">{\White_Normal}Select the way you want features to be installed.</String>
   <String Id="MaintenanceTypeDlgDescription" Overridable="yes">{\White_Normal}Select the operation you wish to perform.</String>
   <String Id="DiskCostDlgDescription" Overridable="yes">{\White_Normal}The disk space required for the installation of the selected features.</String>
+  <String Id="FatalErrorDescription1" Overridable="yes">{\White_Normal}[ProductName] Setup Wizard ended prematurely because of an error. Your system has not been modified. To install this program at a later time, run Setup Wizard again.</String>
 </WixLocalization>
