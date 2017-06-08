@@ -60,7 +60,11 @@ try
     mkdir $ovsServicesBinDir
     move -Force "$ovsCliBinDir\ovsdb-server.exe" $ovsServicesBinDir
     move -Force "$ovsCliBinDir\ovs-vswitchd.exe" $ovsServicesBinDir
+    move -Force "$ovsCliBinDir\ovn-controller.exe" $ovsServicesBinDir
+    move -Force "$ovsCliBinDir\ovn-northd.exe" $ovsServicesBinDir
     copy -Force "$buildOutputDir\vswitch.ovsschema" $ovsServicesBinDir
+    copy -Force "$buildOutputDir\ovn-nb.ovsschema" $ovsServicesBinDir
+    copy -Force "$buildOutputDir\ovn-sb.ovsschema" $ovsServicesBinDir
     copy -Force "$buildOutputDir\OVS.psm1" $msi_project_dir
 
     CheckRemoveDir $ovsDriverBinDir
