@@ -32,7 +32,7 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="mszip" />
 
-    <Feature Id="OpenvSwitchCLI" Title="OVS and OVN binaries" Level="1" Absent="disallow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
+    <Feature Id="OpenvSwitchCLI" Title="OVS and OVN clients" Level="1" Absent="disallow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
              Description="{\WixUI_Font_Normal}Installs the Cloudbase Open vSwitch and Open Virtual Network binaries."
              ConfigurableDirectory="INSTALLDIR" Display="collapse">
       <ComponentGroupRef Id="BinariesComponentGroup" />
@@ -42,43 +42,33 @@
                Absent="disallow" InstallDefault="followParent" TypicalDefault="install">
         <MergeRef Id="VC120Redist_x64" />
       </Feature>
-
-      <Feature Id="OpenvSwitchServices" Title="OVS services" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-             Description="{\WixUI_Font_Normal}Installs and creates the Cloudbase Open vSwitch services: ovsdb-server and ovs-vswitchd" Display="expand">
-        <ComponentRef Id="ConfDir" />
-        <ComponentRef Id="LogsDir" />
-        <ComponentRef Id="AppDataDir" />
-        <ComponentRef Id="OvsdbServerService" />
-        <ComponentRef Id="OvsVSwitchdService" />
-      </Feature>
-
-      <Feature Id="OpenvSwitchSymbols" Title="Debugging Symbols" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-         Description="{\WixUI_Font_Normal}Installs the debugging symbols of the OVS binaries. It is useful when reporting a bug." Display="expand">
-        <ComponentGroupRef Id="SymbolsComponentGroup" />
-      </Feature>
     </Feature>
 
-    <Feature Id="OpenvSwitchDriver" Title="Windows driver" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-             Description="{\WixUI_Font_Normal}Installs the Cloudbase Open vSwitch switch extension driver." Display="expand">
+    <Feature Id="OpenvSwitchDriver" Title="OVS Windows driver" Level="1" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
+             Description="{\WixUI_Font_Normal}Installs the Cloudbase Open vSwitch Windows driver and creates the related services (ovsdb-server, ovs-vswitchd)." Display="expand">
+      <ComponentRef Id="ConfDir" />
+      <ComponentRef Id="LogsDir" />
+      <ComponentRef Id="AppDataDir" />
+      <ComponentRef Id="OvsdbServerService" />
+      <ComponentRef Id="OvsVSwitchdService" />
       <ComponentRef Id="OpenvSwitchDriver_Win8" />
       <ComponentRef Id="OpenvSwitchDriver_Win8.1" />
       <ComponentRef Id="OpenvSwitchPSModule" />
     </Feature>
 
-    <Feature Id="OVNController" Title="OVN controller" Level="2" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-                 Description="Installs the Open Virtual Network controller and adds a service for ovn-controller."
+    <Feature Id="OVNHost" Title="OVN Host" Level="2" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
+                 Description="Creates an Open Virtual Network controller service (ovn-controller)."
                  ConfigurableDirectory="INSTALLDIR" Display="collapse">
       <ComponentRef Id="OpenvSwitchEnvVars" />
       <ComponentRef Id="OvnControllerService" />
+    </Feature>
 
-      <Feature Id="OVNNorthd" Title="OVN NB and SB" Level="2" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
-         Description="Installs the Open Virtual Network Northbound and Southbound database and adds a services."
-         ConfigurableDirectory="INSTALLDIR" Display="expand">
-        <ComponentRef Id="OVN_ConfDir" />
-        <ComponentRef Id="OVN_Northd" />
-        <ComponentRef Id="OpenvSwitchEnvVars" />
-      </Feature>
-
+    <Feature Id="OVNCentral" Title="OVN Central" Level="2" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
+        Description="Creates the OVN and Southbound databases and adds the related services (ovn-northd, ovn-nb-db, ovn-sb-db)."
+        ConfigurableDirectory="INSTALLDIR" Display="expand">
+      <ComponentRef Id="OVN_ConfDir" />
+      <ComponentRef Id="OVN_Northd" />
+      <ComponentRef Id="OpenvSwitchEnvVars" />
     </Feature>
 
     <UIRef Id="MyWixUI_FeatureTree" />
@@ -95,53 +85,53 @@
       <Custom Action="UninstallOpenVSwitchDriver_Prop" After="CostFinalize"><![CDATA[(&OpenvSwitchDriver=2) AND (!OpenvSwitchDriver=3)]]></Custom>
       <Custom Action="UninstallOpenVSwitchDriver" Before="InstallFinalize" ><![CDATA[(&OpenvSwitchDriver=2) AND (!OpenvSwitchDriver=3)]]></Custom>
 
-      <Custom Action="GenerateConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="GenerateConfDB" Before="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
+      <Custom Action="GenerateConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="GenerateConfDB" Before="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
 
-      <Custom Action="StartOvsdbServerService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="RestartOvsdbServerService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="ChangeOvsdbServerService" Before="ChangeOvsVSwitchdService"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
+      <Custom Action="StartOvsdbServerService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="RestartOvsdbServerService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="ChangeOvsdbServerService" Before="InstallFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
 
-      <Custom Action="InitializeDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="InitializeDB" After="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
+      <Custom Action="InitializeDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="InitializeDB" After="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
 
-      <Custom Action="AddTriggerToOvsVswitchdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="AddTriggerToOvsVswitchdService" Before="ChangeOvsVSwitchdService"><![CDATA[NOT Installed AND (&OpenvSwitchServices = 3)]]></Custom>
+      <Custom Action="AddTriggerToOvsVswitchdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="AddTriggerToOvsVswitchdService" Before="ChangeOvsVSwitchdService"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
 
-      <Custom Action="StartOvsVSwitchdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="RestartOvsVSwitchdService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
-      <Custom Action="ChangeOvsVSwitchdService" Before="InstallFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchServices = 3)]]></Custom>
+      <Custom Action="StartOvsVSwitchdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="RestartOvsVSwitchdService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
+      <Custom Action="ChangeOvsVSwitchdService" After="ChangeOvsdbServerService"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
 
-      <Custom Action="StartOvnControllerService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OVNController = 3)]]></Custom>
-      <Custom Action="RestartOvnControllerService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OVNController = 3)]]></Custom>
-      <Custom Action="ChangeOvnControllerService" Before="InstallFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNController = 3)]]></Custom>
+      <Custom Action="StartOvnControllerService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OVNHost = 3)]]></Custom>
+      <Custom Action="RestartOvnControllerService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OVNHost = 3)]]></Custom>
+      <Custom Action="ChangeOvnControllerService" Before="InstallFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNHost = 3)]]></Custom>
 
-      <Custom Action="GenerateNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="GenerateNorthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="GenerateSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="GenerateSouthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
+      <Custom Action="GenerateNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="GenerateNorthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="GenerateSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="GenerateSouthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
 
-      <Custom Action="EnableNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="EnableNorthConfDB" Before="ChangeOvsdbServerService"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="EnableSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="EnableSouthConfDB" Before="ChangeOvsdbServerService"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="StartNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="StartNorthConfDB" Before="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="StartSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="StartSouthConfDB" Before="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
+      <Custom Action="EnableNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="EnableNorthConfDB" Before="ChangeOvsdbServerService"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="EnableSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="EnableSouthConfDB" Before="ChangeOvsdbServerService"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="StartNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="StartNorthConfDB" Before="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="StartSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="StartSouthConfDB" Before="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
 
-      <Custom Action="DisableNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="DisableNorthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="DisableSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="DisableSouthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="StopNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="StopNorthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="StopSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
-      <Custom Action="StopSouthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd=2) AND (!OVNNorthd=3)]]></Custom>
+      <Custom Action="DisableNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="DisableNorthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="DisableSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="DisableSouthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="StopNorthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="StopNorthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="StopSouthConfDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
+      <Custom Action="StopSouthConfDB" Before="InstallFinalize" ><![CDATA[REMOVE <> "ALL" AND (&OVNCentral=2) AND (!OVNCentral=3)]]></Custom>
 
-      <Custom Action="StartOvnNorthdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="RestartOvnNorthdService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
-      <Custom Action="ChangeOvnNorthdService" Before="InstallFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNNorthd = 3)]]></Custom>
+      <Custom Action="StartOvnNorthdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="RestartOvnNorthdService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
+      <Custom Action="ChangeOvnNorthdService" Before="InstallFinalize"><![CDATA[REMOVE <> "ALL" AND (&OVNCentral = 3)]]></Custom>
     </InstallExecuteSequence>
   </Product>
 
@@ -163,10 +153,6 @@
 
     <DirectoryRef Id="INSTALLDIR">
       <Directory Id="BINARIESDIR" Name="bin" />
-    </DirectoryRef>
-
-    <DirectoryRef Id="INSTALLDIR">
-      <Directory Id="SYMBOLSDIR" Name="symbols" />
     </DirectoryRef>
 
     <DirectoryRef Id="INSTALLDIR">
@@ -227,7 +213,7 @@
     <Component Id="OvsdbServerService" Directory="BINARIESDIR" Guid="{280201D5-35E7-45D6-83B9-293F1A4F7F0E}">
       <File Id="ovsdbserver.exe" Source="Services\ovsdb-server.exe" Checksum="yes" />
       <ServiceInstall
-                Arguments='--log-file="[LOGSDIR]ovsdb-server.log" --pidfile --service --service-monitor --unixctl="[APPDATADIR]ovsdb-server.ctl" --remote=punix:"[APPDATADIR]db.sock" --remote=db:Open_vSwitch,Open_vSwitch,manager_options "[CONFDIR]conf.db"'
+                Arguments='--log-file="[LOGSDIR]ovsdb-server.log" --pidfile --service --unixctl="[APPDATADIR]ovsdb-server.ctl" --remote=punix:"[APPDATADIR]db.sock" --remote=db:Open_vSwitch,Open_vSwitch,manager_options "[CONFDIR]conf.db"'
                 Id="OvsdbServerServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
@@ -252,15 +238,15 @@
         FirstFailureActionType="restart"
         SecondFailureActionType="restart"
         ThirdFailureActionType="restart"
-        RestartServiceDelayInSeconds="1" />
+        RestartServiceDelayInSeconds="0" />
 
       <ServiceInstall
-                Arguments='-vconsole:off --log-file="[LOGSDIR]ovsdb-server-nb.log" --pidfile --service --service-monitor --unixctl="[APPDATADIR]ovnnb_db.ctl" --remote=punix:"[APPDATADIR]ovnnb_db.sock"  --remote=db:OVN_Northbound,NB_Global,connections "[CONFDIR]ovnnb_db.db"'
+                Arguments='-vconsole:off --log-file="[LOGSDIR]ovsdb-server-nb.log" --pidfile --service --unixctl="[APPDATADIR]ovnnb_db.ctl" --remote=punix:"[APPDATADIR]ovnnb_db.sock"  --remote=db:OVN_Northbound,NB_Global,connections "[CONFDIR]ovnnb_db.db"'
                 Id="OvnNorthDBServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
-                Name="ovn-north-database"
-                DisplayName="ovn-north-database"
+                Name="ovn-nb-db"
+                DisplayName="OVN Northbound Database"
                 Description="OVN Northbound Database"
                 Start="disabled"
                 Account="LocalSystem"
@@ -271,22 +257,22 @@
        Id="OvnNorthDBServiceStartService"
        Stop="both"
        Remove="uninstall"
-       Name="ovn-north-database"
+       Name="ovn-nb-db"
        Wait="yes" />
       <util:ServiceConfig
-        ServiceName="ovn-north-database"
+        ServiceName="ovn-nb-db"
         FirstFailureActionType="restart"
         SecondFailureActionType="restart"
         ThirdFailureActionType="restart"
-        RestartServiceDelayInSeconds="1" />
+        RestartServiceDelayInSeconds="0" />
 
       <ServiceInstall
-                Arguments='-vconsole:off --log-file="[LOGSDIR]ovsdb-server-sb.log" --pidfile --service --service-monitor --unixctl="[APPDATADIR]ovnsb_db.ctl" --remote=punix:"[APPDATADIR]ovnsb_db.sock"  --remote=db:OVN_Southbound,SB_Global,connections "[CONFDIR]ovnsb_db.db"'
+                Arguments='-vconsole:off --log-file="[LOGSDIR]ovsdb-server-sb.log" --pidfile --service --unixctl="[APPDATADIR]ovnsb_db.ctl" --remote=punix:"[APPDATADIR]ovnsb_db.sock"  --remote=db:OVN_Southbound,SB_Global,connections "[CONFDIR]ovnsb_db.db"'
                 Id="OvnSouthDBServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
-                Name="ovn-south-database"
-                DisplayName="ovn-south-database"
+                Name="ovn-sb-db"
+                DisplayName="OVN Southbound Database"
                 Description="OVN Southbound Database"
                 Start="disabled"
                 Account="LocalSystem"
@@ -298,20 +284,20 @@
        Id="OvnSouthDBServiceStartService"
        Stop="both"
        Remove="uninstall"
-       Name="ovn-south-database"
+       Name="ovn-sb-db"
        Wait="yes" />
       <util:ServiceConfig
-        ServiceName="ovn-south-database"
+        ServiceName="ovn-sb-db"
         FirstFailureActionType="restart"
         SecondFailureActionType="restart"
         ThirdFailureActionType="restart"
-        RestartServiceDelayInSeconds="1" />
+        RestartServiceDelayInSeconds="0" />
     </Component>
 
     <Component Id="OvsVSwitchdService" Directory="BINARIESDIR" Guid="{A2ED5531-B2D7-4CD3-8ADE-B525A8BEB957}">
       <File Id="ovsvswitchd.exe" Source="Services\ovs-vswitchd.exe" Checksum="yes" />
       <ServiceInstall
-                Arguments='--log-file="[LOGSDIR]ovs-vswitchd.log" unix:"[APPDATADIR]db.sock" --unixctl="[APPDATADIR]ovs-vswitchd.ctl" --pidfile --service --service-monitor'
+                Arguments='--log-file="[LOGSDIR]ovs-vswitchd.log" unix:"[APPDATADIR]db.sock" --unixctl="[APPDATADIR]ovs-vswitchd.ctl" --pidfile --service'
                 Id="OvsVSwitchdServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
@@ -336,7 +322,7 @@
         FirstFailureActionType="restart"
         SecondFailureActionType="restart"
         ThirdFailureActionType="restart"
-        RestartServiceDelayInSeconds="1" />
+        RestartServiceDelayInSeconds="0" />
     </Component>
   </Fragment>
 
@@ -363,7 +349,7 @@
     <Component Id="OvnControllerService" Directory="BINARIESDIR" Guid="{b523b447-c282-4cca-8e36-7e506bd647f8}">
       <File Id="ovncontroller.exe" Source="Services\ovn-controller.exe" Checksum="yes" KeyPath="yes" />
       <ServiceInstall
-                Arguments='--log-file="[LOGSDIR]ovn-controller.log" --pidfile --service --service-monitor'
+                Arguments='--log-file="[LOGSDIR]ovn-controller.log" --pidfile --service'
                 Id="OvnControllerServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
@@ -387,7 +373,7 @@
         FirstFailureActionType="restart"
         SecondFailureActionType="restart"
         ThirdFailureActionType="restart"
-        RestartServiceDelayInSeconds="1" />
+        RestartServiceDelayInSeconds="0" />
     </Component>
   </Fragment>
 
@@ -406,7 +392,7 @@
     <Component Id="OVN_Northd" Directory="BINARIESDIR" Guid="{934a155d-c09f-40b9-ad31-80f43119f2b1}">
       <File Id="ovnnorthd.exe" Source="Services\ovn-northd.exe" Checksum="yes" KeyPath="yes" />
       <ServiceInstall
-                Arguments='-vconsole:emer -vsyslog:err -vfile:info --log-file="[LOGSDIR]ovn-northd.log" --pidfile --service --service-monitor --ovnnb-db=unix:"[APPDATADIR]ovnnb_db.sock" --ovnsb-db=unix:"[APPDATADIR]ovnnb_db.sock"'
+                Arguments='-vconsole:emer -vsyslog:err -vfile:info --log-file="[LOGSDIR]ovn-northd.log" --pidfile --service --ovnnb-db=unix:"[APPDATADIR]ovnnb_db.sock" --ovnsb-db=unix:"[APPDATADIR]ovnnb_db.sock"'
                 Id="OvnNorthdServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
@@ -430,7 +416,7 @@
         FirstFailureActionType="restart"
         SecondFailureActionType="restart"
         ThirdFailureActionType="restart"
-        RestartServiceDelayInSeconds="1" />
+        RestartServiceDelayInSeconds="0" />
     </Component>
   </Fragment>
 

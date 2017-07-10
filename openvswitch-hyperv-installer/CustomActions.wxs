@@ -42,56 +42,56 @@
                   JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
 
     <CustomAction Id="EnableNorthConfDB_Prop" Property="EnableNorthConfDB"
-                  Value='"[System64Folder]sc.exe" config ovn-north-database start= auto|0|could not set ovn-north-database to auto start'
+                  Value='"[System64Folder]sc.exe" config ovn-nb-db start= auto|0|could not set ovn-nb-db to auto start'
                   Execute="immediate" />
     <CustomAction Id="EnableNorthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
 
     <CustomAction Id="EnableSouthConfDB_Prop" Property="EnableSouthConfDB"
-                  Value='"[System64Folder]sc.exe" config ovn-south-database start= auto|0|could not set ovn-south-database to auto start'
+                  Value='"[System64Folder]sc.exe" config ovn-sb-db start= auto|0|could not set ovn-sb-db to auto start'
                   Execute="immediate" />
     <CustomAction Id="EnableSouthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="runCommandAction" Execute="deferred" Return="check" Impersonate="no" />
 
     <CustomAction Id="DisableNorthConfDB_Prop" Property="DisableNorthConfDB"
-                  Value='"[System64Folder]sc.exe" config ovn-north-database start= disabled'
+                  Value='"[System64Folder]sc.exe" config ovn-nb-db start= disabled'
                   Execute="immediate" />
     <CustomAction Id="DisableNorthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="runCommandAction" Execute="deferred" Impersonate="no" />
 
     <CustomAction Id="DisableSouthConfDB_Prop" Property="DisableSouthConfDB"
-                  Value='"[System64Folder]sc.exe" config ovn-south-database start= disabled'
+                  Value='"[System64Folder]sc.exe" config ovn-sb-db start= disabled'
                   Execute="immediate" />
     <CustomAction Id="DisableSouthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="runCommandAction" Execute="deferred" Impersonate="no" />
 
     <CustomAction Id="StopNorthConfDB_Prop" Property="StopNorthConfDB"
-                  Value='"[System64Folder]net.exe" stop ovn-north-database'
+                  Value='"[System64Folder]net.exe" stop ovn-nb-db'
                   Execute="immediate" />
     <CustomAction Id="StopNorthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="runCommandAction" Execute="deferred" Impersonate="no" />
 
     <CustomAction Id="StopSouthConfDB_Prop" Property="StopSouthConfDB"
-                  Value='"[System64Folder]net.exe" stop ovn-south-database'
+                  Value='"[System64Folder]net.exe" stop ovn-sb-db'
                   Execute="immediate" />
     <CustomAction Id="StopSouthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="runCommandAction" Execute="deferred" Impersonate="no" />
 
     <CustomAction Id="StartNorthConfDB_Prop" Property="StartNorthConfDB"
-                  Value='ovn-north-database||Start'
+                  Value='ovn-nb-db||Start'
                   Execute="immediate" />
     <CustomAction Id="StartNorthConfDB"
                   BinaryKey="OVSActions"
                   JScriptCall="changeServiceAction" Execute="deferred" Return="check" Impersonate="no" />
 
     <CustomAction Id="StartSouthConfDB_Prop" Property="StartSouthConfDB"
-                  Value='ovn-south-database||Start'
+                  Value='ovn-sb-db||Start'
                   Execute="immediate" />
     <CustomAction Id="StartSouthConfDB"
                   BinaryKey="OVSActions"
