@@ -115,6 +115,21 @@ function Expand7z($archive, $outputDir = ".")
     }
 }
 
+function Compress7z($inputDir, $outputName, $outputDir = ".")
+{
+    pushd .
+    try
+    {
+        cd "$outputDir"
+        &7z a -tzip "$outputName.$type" "$inputDir"
+        if ($LastExitCode) { throw "7z.exe failed to create archive: $outputName"}
+    }
+    finally
+    {
+        popd
+    }
+}
+
 function PullRelease($project, $release, $version)
 {
     pushd .

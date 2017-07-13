@@ -74,6 +74,7 @@ try
     CheckRemoveDir $ovsSymbolsDir
     mkdir $ovsSymbolsDir
     copy -Force "$buildOutputSymbolsDir\*" $ovsSymbolsDir
+    Compress7z $ovsSymbolsDir "symbols"
 
     pushd .
     try
