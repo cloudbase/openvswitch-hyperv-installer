@@ -27,6 +27,7 @@ try
     $ENV:PATH += ";$ENV:ProgramFiles (x86)\Git\bin\"
     # Needed for SSH
     $ENV:HOME = $ENV:USERPROFILE
+    $ENV:PATH += ";$ENV:ProgramFiles\7-zip\"
 
     $vsVersion = "12.0"
     $platform = "x86_amd64"
