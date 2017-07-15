@@ -15,23 +15,23 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>BinariesPath=Binaries;SymbolsPath=Symbols;Debug;Version=$(Version)</DefineConstants>
+    <DefineConstants>BinariesPath=Binaries;Debug;Version=$(Version)</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <DefineConstants>BinariesPath=Binaries;SymbolsPath=Symbols;Version=$(Version)</DefineConstants>
+    <DefineConstants>BinariesPath=Binaries;Version=$(Version)</DefineConstants>
     <SuppressAllWarnings>False</SuppressAllWarnings>
     <Pedantic>False</Pedantic>
     <SuppressSpecificWarnings>1076;</SuppressSpecificWarnings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>BinariesPath=Binaries;SymbolsPath=Symbols;Debug;Version=$(Version)</DefineConstants>
+    <DefineConstants>BinariesPath=Binaries;Debug;Version=$(Version)</DefineConstants>
     <OutputPath>bin\$(Platform)\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <DefineConstants>BinariesPath=Binaries;SymbolsPath=Symbols;Version=$(Version)</DefineConstants>
+    <DefineConstants>BinariesPath=Binaries;Version=$(Version)</DefineConstants>
     <SuppressAllWarnings>False</SuppressAllWarnings>
     <Pedantic>False</Pedantic>
     <SuppressSpecificWarnings>1076;</SuppressSpecificWarnings>
@@ -46,7 +46,6 @@
     <Compile Include="Dialogs\UserFinishDialog.wxs" />
     <Compile Include="Dialogs\BeginningDialog.wxs" />
     <Compile Include="Product.wxs" />
-    <Compile Include="Symbols.wxs" />
     <Compile Include="UI.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +56,6 @@
     <Folder Include="Driver" />
     <Folder Include="Services" />
     <Folder Include="Redist" />
-    <Folder Include="Symbols" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Actions\OVSActions.js" />
@@ -83,8 +81,6 @@
   <Import Project="$(WixTargetsPath)" />
   <Target Name="BeforeBuild">
     <HeatDirectory DirectoryRefId="BINARIESDIR" OutputFile="Binaries.wxs" Directory="Binaries" ComponentGroupName="BinariesComponentGroup" ToolPath="$(WixToolPath)" PreprocessorVariable="var.BinariesPath" GenerateGuidsNow="true" SuppressCom="true" SuppressRegistry="true" KeepEmptyDirectories="true" SuppressRootDirectory="true">
-    </HeatDirectory>
-    <HeatDirectory DirectoryRefId="SYMBOLSDIR" OutputFile="Symbols.wxs" Directory="Symbols" ComponentGroupName="SymbolsComponentGroup" ToolPath="$(WixToolPath)" PreprocessorVariable="var.SymbolsPath" GenerateGuidsNow="true" SuppressCom="true" SuppressRegistry="true" KeepEmptyDirectories="true" SuppressRootDirectory="true">
     </HeatDirectory>
   </Target>
   <!--
