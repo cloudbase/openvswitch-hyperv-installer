@@ -375,3 +375,9 @@ function SignTool($crossCertPath, $signX509Thumbprint, $timestampUrl, $path) {
     & signtool.exe sign /ac "$crossCertPath" /sha1 "$signX509Thumbprint" /tr "$timestampUrl" /td SHA256 /v "$path"
     if ($LastExitCode) { throw "signtool failed" }
 }
+
+function CreateZip($zipPath, $path)
+{
+    &7z.exe a -r $zipPath $path
+    if ($LastExitCode) { throw "7z.exe failed to create archive: $archive"}
+}
