@@ -74,6 +74,9 @@ try
     pushd $buildOutputSymbolsDir
     try
     {
+        if (Test-Path $ovsSymbolsZipPath) {
+            del $ovsSymbolsZipPath
+        }
         CreateZip $ovsSymbolsZipPath *
     }
     finally
