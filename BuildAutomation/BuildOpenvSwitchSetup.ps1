@@ -32,7 +32,7 @@ try
     $platform = "x86_amd64"
     SetVCVars $vsVersion $platform
 
-    $solution_dir = "openvswitch-hyperv-installer"
+    $solution_dir = Join-Path $pwd "openvswitch-hyperv-installer"
 
     ExecRetry {
         # Make sure to have a private key that matches a github deployer key in $ENV:HOME\.ssh\id_rsa
@@ -49,7 +49,7 @@ try
     $ovsCliBinDir = "$msi_project_dir\Binaries"
     $ovsServicesBinDir = "$msi_project_dir\Services"
     $ovsDriverBinDir = "$msi_project_dir\Driver"
-    $ovsSymbolsDir = "$msi_project_dir\Symbols"
+    $ovsSymbolsZipPath = "$buildDir\Symbols.zip"
 
     CheckRemoveDir $ovsCliBinDir
     mkdir $ovsCliBinDir
@@ -71,9 +71,15 @@ try
     mkdir $ovsDriverBinDir
     copy -Recurse -Force "$driverBuildOutputDir\*" $ovsDriverBinDir
 
-    CheckRemoveDir $ovsSymbolsDir
-    mkdir $ovsSymbolsDir
-    copy -Force "$buildOutputSymbolsDir\*" $ovsSymbolsDir
+    pushd $buildOutputSymbolsDir
+    try
+    {
+        CreateZip $ovsSymbolsZipPath *
+    }
+    finally
+    {
+        popd
+    }
 
     pushd .
     try
