@@ -182,6 +182,7 @@ exit
     }
 
     copy -Force "$openvSwitchHyperVDir\datapath-windows\misc\OVS.psm1" $outputPath
+    copy -Force "$openvSwitchHyperVDir\datapath-windows\misc\HNSHelper.psm1" $outputPath
 
     # For signing info, see:
     # https://knowledge.symantec.com/support/code-signing-support/index?page=content&id=SO5820
