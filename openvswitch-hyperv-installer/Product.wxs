@@ -54,6 +54,7 @@
       <ComponentRef Id="OpenvSwitchDriver_Win8" />
       <ComponentRef Id="OpenvSwitchDriver_Win8.1" />
       <ComponentRef Id="OpenvSwitchPSModule" />
+      <ComponentRef Id="HelpersPSModule" />
     </Feature>
 
     <Feature Id="OVNHost" Title="OVN Host" Level="2" Absent="allow" InstallDefault="local" TypicalDefault="install" AllowAdvertise="no"
@@ -94,9 +95,6 @@
 
       <Custom Action="InitializeDB_Prop" After="CostFinalize"><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
       <Custom Action="InitializeDB" After="ChangeOvsdbServerService" ><![CDATA[REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
-
-      <Custom Action="AddTriggerToOvsVswitchdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
-      <Custom Action="AddTriggerToOvsVswitchdService" Before="ChangeOvsVSwitchdService"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
 
       <Custom Action="StartOvsVSwitchdService_Prop" After="CostFinalize"><![CDATA[NOT Installed AND (&OpenvSwitchDriver = 3)]]></Custom>
       <Custom Action="RestartOvsVSwitchdService_Prop" After="CostFinalize"><![CDATA[Installed AND REMOVE <> "ALL" AND (&OpenvSwitchDriver = 3)]]></Custom>
@@ -179,6 +177,7 @@
           <Directory Id="v1.0" Name="v1.0">
             <Directory Id="Modules" Name="Modules">
               <Directory Id="OVSPSMODULEDIR" Name="OVS" />
+              <Directory Id="CONTAINERSDIR" Name="HNSHelper" />
             </Directory>
           </Directory>
         </Directory>
@@ -187,6 +186,9 @@
 
     <Component Id="OpenvSwitchPSModule" Directory="OVSPSMODULEDIR" Guid="{91819E0F-36F9-44C1-BCA3-973AE991E386}" Win64="yes">
       <File Id="OVS.psm1" Source="OVS.psm1" Checksum="yes" KeyPath="yes" />
+    </Component>
+    <Component Id="HelpersPSModule" Directory="CONTAINERSDIR" Guid="{91819E0F-36F9-44C1-DCA3-973AE991E389}" Win64="yes">
+      <File Id="HNSHelper.psm1" Source="HNSHelper.psm1" Checksum="yes" KeyPath="yes" />
     </Component>
   </Fragment>
 
@@ -224,7 +226,6 @@
                 Account="LocalSystem"
                 ErrorControl="ignore"
                 Interactive="no">
-        <ServiceDependency Id="vmms" />
       </ServiceInstall>
       <!-- Start service at the end of the setup, not here -->
       <ServiceControl
@@ -304,7 +305,7 @@
                 Name="ovs-vswitchd"
                 DisplayName="Open vSwitch Service"
                 Description="Open vSwitch Service"
-                Start="demand"
+                Start="auto"
                 Account="LocalSystem"
                 ErrorControl="ignore"
                 Interactive="no">

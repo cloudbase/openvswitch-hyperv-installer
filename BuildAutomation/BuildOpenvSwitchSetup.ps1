@@ -67,6 +67,7 @@ try
     copy -Force "$buildOutputDir\ovn-nb.ovsschema" $ovsServicesBinDir
     copy -Force "$buildOutputDir\ovn-sb.ovsschema" $ovsServicesBinDir
     copy -Force "$buildOutputDir\OVS.psm1" $msi_project_dir
+    copy -Force "$buildOutputDir\HNSHelper.psm1" $msi_project_dir
 
     CheckRemoveDir $ovsDriverBinDir
     mkdir $ovsDriverBinDir
