@@ -392,7 +392,7 @@
     <Component Id="OVN_Northd" Directory="BINARIESDIR" Guid="{934a155d-c09f-40b9-ad31-80f43119f2b1}">
       <File Id="ovnnorthd.exe" Source="Services\ovn-northd.exe" Checksum="yes" KeyPath="yes" />
       <ServiceInstall
-                Arguments='-vconsole:emer -vsyslog:err -vfile:info --log-file="[LOGSDIR]ovn-northd.log" --pidfile --service --ovnnb-db=unix:"[APPDATADIR]ovnnb_db.sock" --ovnsb-db=unix:"[APPDATADIR]ovnnb_db.sock"'
+                Arguments='-vconsole:emer -vsyslog:err -vfile:info --log-file="[LOGSDIR]ovn-northd.log" --pidfile --service --ovnnb-db=unix:"[APPDATADIR]ovnnb_db.sock" --ovnsb-db=unix:"[APPDATADIR]ovnsb_db.sock"'
                 Id="OvnNorthdServiceServiceInstaller"
                 Type="ownProcess"
                 Vital="yes"
