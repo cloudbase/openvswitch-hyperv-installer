@@ -1,5 +1,5 @@
 Param(
-  [string]$Branch = "master",
+  [string]$Branch = "2.9",
   [string]$OVSGitBranch = "branch-2.9-cloudbase",
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
