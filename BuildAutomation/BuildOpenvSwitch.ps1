@@ -110,7 +110,7 @@ set -e
 cd $msysCwd
 echo `$INCLUDE
 ./boot.sh
-./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32 -liphlpapi -lwbemuuid -lole32 -loleaut32" --prefix="C:/ProgramData/openvswitch" \
+./configure CC=./build-aux/cccl LD="$vsLinkPath" LIBS="-lws2_32 -lShlwapi -liphlpapi -lwbemuuid -lole32 -loleaut32" --prefix="C:/ProgramData/openvswitch" \
 --localstatedir="C:/ProgramData/openvswitch" --sysconfdir="C:/ProgramData/openvswitch" \
 --with-pthread="$pthreadDir" --with-vstudiotarget="Release" --enable-ssl --with-openssl="$opensslDir"
 make clean && make
