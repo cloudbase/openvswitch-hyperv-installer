@@ -1,10 +1,10 @@
 Param(
-  [string]$Branch = "2.10",
-  [string]$OVSGitBranch = "branch-2.10-cloudbase",
+  [string]$Branch = "2.12",
+  [string]$OVSGitBranch = "branch-2.12-cloudbase",
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
   [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer",
-  [string]$OvsVersion = "2.10.0"
+  [string]$OvsVersion = "2.12.0"
 )
 
 $ErrorActionPreference = "Stop"
