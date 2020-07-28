@@ -4,7 +4,7 @@ Param(
   [string]$SignX509Thumbprint,
   [string]$SignTimestampUrl = "http://timestamp.globalsign.com/?signature=sha2",
   [string]$SignCrossCertPath = "$scriptPath\GlobalSign_r1cross.cer",
-  [string]$OvsVersion = "2.12.0"
+  [string]$OvsVersion = "2.12.1"
 )
 
 $ErrorActionPreference = "Stop"
